@@ -10,10 +10,10 @@ let commandsList = {
         } else {
             commandToQuery = arguments[0][0];
         }
-        if (helpText.hasOwnProperty(commandToQuery)) {
+        if (gamedata.helpText.hasOwnProperty(commandToQuery)) {
             pt(commandToQuery, "命令的使用方法如下：");
-            for (i in helpText[commandToQuery]) {
-                pt(indent(i, "4##16#") + helpText[commandToQuery][i])
+            for (i in gamedata.helpText[commandToQuery]) {
+                pt(indent(i, "4##16#") + gamedata.helpText[commandToQuery][i])
             }
             return true;
         } else {
@@ -32,7 +32,7 @@ let commandsList = {
                 target += " " + i;
             }
             target = target.substring(1);
-            let range = [].concat(player.items).concat(player.location.items);
+            let range = [].concat(gamedata.player.items).concat(gamedata.player.location.items);
             for (i in range) {
                 if (range[i].id === target) {
                     pt(describeItem(range[i], 1));
@@ -47,7 +47,7 @@ let commandsList = {
         if (arguments[0].length === 0) {
             pt("你看了看你的口袋。");
             pt("里面有：");
-            for (i of player.items) {
+            for (i of gamedata.player.items) {
                 pt(indent(describeItem(i, 0), "4###"));
             }
             return true;
@@ -62,10 +62,10 @@ let commandsList = {
             return false;
         }
         pt("=== 任务列表 ===============");
-        if (player.tasks.length === 0) {
+        if (gamedata.player.tasks.length === 0) {
             pt(indent("你现在没有要做的事。", "4###"));
         } else {
-            for (i of player.tasks) {
+            for (i of gamedata.player.tasks) {
                 pt(indent('【' + i.name + '】' + i.detail, "4###"));
             }
         }
@@ -75,15 +75,15 @@ let commandsList = {
 
 function checkTasks(playerAction) {
     let taskFinishFlag = false;
-    for (taskIndex in player.tasks) {
-        if (playerAction === player.tasks[taskIndex].requirement
-                && player.location === map[player.tasks[taskIndex].location]) {
-            pt("你完成了任务【" + player.tasks[taskIndex].name + "】。");
-            if (player.tasks[taskIndex].hasOwnProperty("next")) {
-                playerAddTask(player.tasks[taskIndex].next);
-                pt("新的任务【" + tasks[player.tasks[taskIndex].next].name + "】已追加。");
+    for (taskIndex in gamedata.player.tasks) {
+        if (gamedata.playerAction === gamedata.player.tasks[taskIndex].requirement
+                && gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]) {
+            pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
+            if (gamedata.player.tasks[taskIndex].hasOwnProperty("next")) {
+                gamedata.playerAddTask(gamedata.player.tasks[taskIndex].next);
+                pt("新的任务【" + gamedata.tasks[gamedata.player.tasks[taskIndex].next].name + "】已追加。");
             }
-            player.tasks.splice(taskIndex, 1);
+            gamedata.player.tasks.splice(taskIndex, 1);
             taskFinishFlag = true;
         }
     }
@@ -102,35 +102,35 @@ function characterSpeak(speaker, speech) {
 }
 
 function playerMove(dest) {
-    if (map.hasOwnProperty(dest) === false) {
+    if (gamedata.map.hasOwnProperty(dest) === false) {
         return;
     }
-    player.location = map[dest];
+    gamedata.player.location = gamedata.map[dest];
     describeLocation();
     document.getElementById("output").value += '\n';
     return;
 }
 
 function playerAddTask(taskName) {
-    if (tasks.hasOwnProperty(taskName) === false) {
+    if (gamedata.tasks.hasOwnProperty(taskName) === false) {
         return;
     }
-    player.tasks.push(tasks[taskName]);
-    characterSpeak(player, tasks[taskName].dialogueWhenAccept);
+    gamedata.player.tasks.push(gamedata.tasks[taskName]);
+    characterSpeak(gamedata.player, gamedata.tasks[taskName].dialogueWhenAccept);
     return;
 }
 
 function startTutorial() {
     playerMove("tutorial");
-    player.items.push(uniqueItem["beginners_guide"]);
+    gamedata.player.items.push(gamedata.uniqueItem["beginners_guide"]);
     playerAddTask("tutorial-0")
 }
 
 function describeLocation() {
-    pt("这里是" + player.location.name + "。");
-    pt(player.location.detail);
+    pt("这里是" + gamedata.player.location.name + "。");
+    pt(gamedata.player.location.detail);
     pt("这里有：");
-    for (i of player.location.items) {
+    for (i of gamedata.player.location.items) {
         pt(indent(describeItem(i, 0), "4###"));
     }
 }
@@ -140,13 +140,13 @@ function describeItem(item, type) {
     // type 参数为 0 或 1 分别表示简短描述和详细描述。
     let res = "";
     let itemName = function() {
-        itemMaterial = item.hasOwnProperty("material") ? material[item.material].name : "";
-        return itemMaterial + names[item.id] + '（' + item.id + '）';
+        itemMaterial = item.hasOwnProperty("material") ? gamedata.material[item.material].name : "";
+        return itemMaterial + gamedata.names[item.id] + '（' + item.id + '）';
     }
     if (type === 0) {
         if (item.hasOwnProperty("attributes")) {
             for (i of item.attributes) {
-                res += attribute[i].name + "的";
+                res += gamedata.attribute[i].name + "的";
             }
         }
         res += itemName();
@@ -155,7 +155,7 @@ function describeItem(item, type) {
         res = "这是";
         if (item.hasOwnProperty("attributes")) {
             for (i of item.attributes) {
-                res += attribute[i].name + "的";
+                res += gamedata.attribute[i].name + "的";
             }
         }
         res += itemName() + '。';
