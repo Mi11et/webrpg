@@ -4,11 +4,17 @@ let commandsList = {
             pterr("一次只能查询一种命令。");
             return false;
         }
-        if (commandsList.hasOwnProperty(arguments[0][0])) {
-            pt(helpText[arguments[0][0]]);
+        let commandToQuery = "";
+        if (arguments[0].length === 0) {
+            commandToQuery = "help";
+        } else {
+            commandToQuery = arguments[0][0];
+        }
+        if (commandsList.hasOwnProperty(commandToQuery)) {
+            pt(helpText[commandToQuery]);
             return true;
         } else {
-            pterr("找不到命令", arguments[0][0]);
+            pterr("找不到命令", commandToQuery);
             return false;
         }
     },
@@ -39,7 +45,7 @@ let commandsList = {
             pt("你看了看你的口袋。");
             pt("里面有：");
             for (i of player.items) {
-                pt(tab(1), describeItem(i, 0));
+                pt(indent(describeItem(i, 0), "4###"));
             }
             return true;
         } else {
@@ -54,10 +60,10 @@ let commandsList = {
         }
         pt("=== 任务列表 ===============");
         if (player.tasks.length === 0) {
-            pt(tab(1), "你现在没有要做的事。");
+            pt(indent("你现在没有要做的事。", "4###"));
         } else {
             for (i of player.tasks) {
-                pt(tab(1), '【' + i.name + '】' + i.detail);
+                pt(indent('【' + i.name + '】' + i.detail, "4###"));
             }
         }
         return true;
@@ -122,7 +128,7 @@ function describeLocation() {
     pt(player.location.detail);
     pt("这里有：");
     for (i of player.location.items) {
-        pt(tab(1), describeItem(i, 0));
+        pt(indent(describeItem(i, 0), "4###"));
     }
 }
 
@@ -153,7 +159,7 @@ function describeItem(item, type) {
         if (item.hasOwnProperty("items")) {
             res += "里面有：\n";
             for (i of item.items) {
-                res += tab(1) + describeItem(i, 0);
+                res += indent(describeItem(i, 0), "4###");
             }
         }
     }

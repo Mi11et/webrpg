@@ -7,13 +7,32 @@ window.onload = function() {
     return;
 }
 
-function tab(tabLength) {
-    if (tabLength === 0) return;
-    let tabStr = "";
-    for (tabCnt = 0; tabCnt < tabLength; tabCnt++) {
-        tabStr += "    ";
+function indent(targetString, formatString) {
+    // 给字符串添加缩进，返回缩进后的字符串
+    // 参数为要缩进的字符串和一个表示缩进方法的字符串。
+    // 缩进方法的格式为：左侧空格数 + L/R + 期望长度 + 右侧空格数，用 # 分隔
+    // 左/右侧空格数默认为 0 ，缩进方法默认为左对齐（L），期望长度默认为字符串长度
+    let getLength = function(str) {
+        return str.replace(/[\u4e00-\u9fff]/g, "__").length;
+    }; 
+    let tab = function(spaceLength) {
+        if (spaceLength <= 0) return "";
+        let res = "";
+        for (spaceCnt = 0; spaceCnt < spaceLength; spaceCnt++) {
+            res += " ";
+        }
+        return res;
     }
-    return tabStr.substring(1);
+    let resultString = "";
+    let stringList = Array.from(arguments);
+    let len = getLength(targetString);
+    let format = formatString.split('#');
+    resultString += tab(parseInt(format[0]));
+    let diff = tab(parseInt(format[2]) - len);
+    if (format[1] === 'L' || format[1] === '') resultString += targetString + diff;
+    if (format[1] === 'R') resultString += diff + targetString;
+    resultString += tab(parseInt(format[3]));
+    return resultString;
 }
 
 function pt() {
