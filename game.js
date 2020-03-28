@@ -10,11 +10,14 @@ let commandsList = {
         } else {
             commandToQuery = arguments[0][0];
         }
-        if (commandsList.hasOwnProperty(commandToQuery)) {
-            pt(helpText[commandToQuery]);
+        if (helpText.hasOwnProperty(commandToQuery)) {
+            pt(commandToQuery, "命令的使用方法如下：");
+            for (i in helpText[commandToQuery]) {
+                pt(indent(i, "4##16#") + helpText[commandToQuery][i])
+            }
             return true;
         } else {
-            pterr("找不到命令", commandToQuery);
+            pterr("找不到", commandToQuery, "命令的说明");
             return false;
         }
     },
