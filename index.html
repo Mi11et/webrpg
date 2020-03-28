@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Text Adventure</title>
+        <meta charset="UTF-8">
+        <script type="text/javascript" src="./io.js"></script>
+        <script type="text/javascript" src="./data.js"></script>
+        <script type="text/javascript" src="./game.js"></script>
+
+        <style type="text/css">
+            #main textarea {
+                resize: none;
+                overflow-x: hidden;
+                overflow-y: scroll;
+                font-family: monospace;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1 style="text-align: center;">Text Adventure</h1>
+        <div id="main" style="text-align: center;">
+            <textarea id="output" cols=80 rows=24 readonly></textarea>
+            <br />
+            <textarea 
+              id="input" 
+              onkeydown="onReturn();" 
+              cols=80 
+              rows=1 
+              autofocus 
+              wrap="soft"></textarea>
+        </div>
+    </body>
+</html>
