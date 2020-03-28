@@ -76,11 +76,11 @@ let commandsList = {
 function checkTasks(playerAction) {
     let taskFinishFlag = false;
     for (taskIndex in gamedata.player.tasks) {
-        if (gamedata.playerAction === gamedata.player.tasks[taskIndex].requirement
+        if (playerAction === gamedata.player.tasks[taskIndex].requirement
                 && gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]) {
             pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
             if (gamedata.player.tasks[taskIndex].hasOwnProperty("next")) {
-                gamedata.playerAddTask(gamedata.player.tasks[taskIndex].next);
+                playerAddTask(gamedata.player.tasks[taskIndex].next);
                 pt("新的任务【" + gamedata.tasks[gamedata.player.tasks[taskIndex].next].name + "】已追加。");
             }
             gamedata.player.tasks.splice(taskIndex, 1);
