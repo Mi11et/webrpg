@@ -107,7 +107,7 @@ function playerAddTask(taskName) {
         return;
     }
     player.tasks.push(tasks[taskName]);
-    characterSpeak(player, tasks[taskName].dialogue);
+    characterSpeak(player, tasks[taskName].dialogueWhenAccept);
     return;
 }
 
