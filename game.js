@@ -32,7 +32,8 @@ let commandsList = {
                 target += " " + i;
             }
             target = target.substring(1);
-            let range = [].concat(gamedata.player.items).concat(gamedata.player.location.items);
+            let range = {};
+            Object.assign(range, gamedata.player.items, gamedata.player.location.items);
             for (i in range) {
                 if (range[i].id === target) {
                     pt(describeItem(range[i], 1));
@@ -86,13 +87,14 @@ let commandsList = {
             target += " " + i;
         }
         target = target.substring(1);
-        let range = [].concat(gamedata.player.items).concat(gamedata.player.location.items);
-        for (i of range) {
-            if (i.id === target) {
-                if (!i.hasOwnProperty("content")) {
+        let range = {};
+        Object.assign(range, gamedata.player.items, gamedata.player.location.items);
+        for (i in range) {
+            if (range[i].id === target) {
+                if (!range[i].hasOwnProperty("content")) {
                     pterr(target, "没什么好读的。")
                 }
-                pt(readContent(i));
+                pt(readContent(range[i]));
                 return true;
             }
         }
@@ -115,11 +117,23 @@ function checkTasks(playerAction) {
                 playerAddTask(gamedata.player.tasks[taskIndex].next);
                 pt("新的任务【" + gamedata.tasks[gamedata.player.tasks[taskIndex].next].name + "】已追加。");
             }
+            if (gamedata.player.tasks[taskIndex].hasOwnProperty("afterFinish")) {
+                eval(gamedata.player.tasks[taskIndex].afterFinish);
+            }
             gamedata.player.tasks.splice(taskIndex, 1);
             taskFinishFlag = true;
         }
     }
     return taskFinishFlag;
+}
+
+function playerRecognize() {
+    for (let i = 0; i < arguments.length; ++i) {
+        if (gamedata.map.hasOwnProperty(arguments[i])) {
+            gamedata.player.knownLocation.push(arguments[i]);
+        }
+    }
+    return;
 }
 
 function gameInit() {
@@ -163,13 +177,12 @@ function playerAddTask(taskName) {
 function startTutorial() {
     playerMove("travellers_room");
     gamedata.player.name = "？？？";
-    gamedata.player.items.push(gamedata.uniqueItem["tutorial_letter_to_traveller"]);
     playerAddTask("tutorial-whoami")
 }
 
 function describeLocation() {
     let locationName = "";
-    if (gamedata.player.knownLocation.hasOwnProperty(gamedata.player.location)) {
+    if (gamedata.player.knownLocation.includes(gamedata.player.location.id)) {
         locationName = gamedata.player.location.name;
     } else {
         locationName = "陌生的地方";
@@ -177,8 +190,8 @@ function describeLocation() {
     pt("这里是" + locationName + "。");
     pt(gamedata.player.location.detail);
     pt("这里有：");
-    for (i of gamedata.player.location.items) {
-        pt(indent(describeItem(i, 0), "4###"));
+    for (i in gamedata.player.location.items) {
+        pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
     }
 }
 
@@ -223,14 +236,16 @@ function describeItem(item, type) {
 
 function readContent(itemToRead) {
     let textList = itemToRead.content;
-    let formattedContent = "";
+    let formattedContent = describeItem(itemToRead, 0) + "中如此写着：";
     for (i of textList) {
         if (i[0] == '#') {
-            formattedContent += indent(i.substring(1), "8###") + '\n';
+            formattedContent += '\n' + indent(i.substring(1), "8###");
         } else if (i[0] == '@') {
-            formattedContent += indent("——" + i.substring(1), "8###") + '\n';
+            formattedContent += '\n' + indent("——" + i.substring(1), "8###");
+        } else if (i[0] == '$') {
+            eval(i.substring(1));
         } else {
-            formattedContent += indent(i, "4###") + '\n';
+            formattedContent += '\n' + indent(i, "4###");
         }
     }
     return formattedContent;

@@ -1,15 +1,28 @@
 let gamedata = {
     "map" : {
         "travellers_room" : {
-            "name" : "流浪者的容身之所",
+            "id" : "travellers_room",
+            "name" : "流浪者的房间",
             "detail" : "提示：使用 task 命令来看看下一步要做什么。\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
-            "items" : [
-                {
+            "items" : {
+                "bed" : {
                     "id" : "bed",
                     "carriable" : false,
                     "material" : "wood"
+                },
+                "tutorial_letter_to_traveller" : {
+                    "id" : "note",
+                    "carriable" : false,
+                    "content" : [
+                        "#给流浪者的一封信：",
+                        "这里是为无家可归的人准备的容身之所，在这里休息不需要支付任何费用。",
+                        "每天早晨，我会把前一天剩下的食物放在门外走廊的架子上，这些食物也是免费的。",
+                        "只要遵守规矩别捣乱，你就可以一直住在这里。",
+                        "@旅店老板",
+                        "$playerRecognize(\"travellers_room\");"
+                    ]
                 }
-            ]
+            }
         }
     },
 
@@ -37,7 +50,7 @@ let gamedata = {
             "dialogueWhenAccept" : "墙上好像有张字条，不知道是谁写的，先读读看吧。",
             "location" : "travellers_room",
             "requirement" : "read note",
-            "next" : "tutorial-get"
+            "next" : "tutorial-get",
         },
         "tutorial-look" : {
             "name" : "观察周围",
@@ -77,20 +90,6 @@ let gamedata = {
         "note" : "字条"
     },
 
-    "uniqueItem" : {
-        "tutorial_letter_to_traveller" : {
-            "id" : "note",
-            "carriable" : true,
-            "content" : [
-                "#给流浪者的一封信：",
-                "这里是为无家可归的人准备的容身之所，在这里休息不需要支付任何费用。",
-                "每天早晨，我会把前一天剩下的食物放在门外走廊的架子上，这些食物也是免费的。",
-                "只要遵守规矩别捣乱，你就可以一直住在这里。",
-                "@旅店老板"
-            ]
-        }
-    },
-
     "helpText" : {
         "help" : {
             "help" : "显示此帮助。",
@@ -105,6 +104,9 @@ let gamedata = {
         },
         "task" : {
             "task" : "列出玩家当前需要完成的任务。"
+        },
+        "whoami" : {
+            "whoami" : "查看玩家信息。"
         }
     }
 }
