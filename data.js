@@ -1,8 +1,8 @@
 let gamedata = {
     "map" : {
-        "tutorial" : {
-            "name" : "陌生房间",
-            "detail" : "你也不知道这是哪里。\n提示：使用 task 命令来看看下一步要做什么。\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
+        "travellers_room" : {
+            "name" : "流浪者的容身之所",
+            "detail" : "提示：使用 task 命令来看看下一步要做什么。\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
             "items" : [
                 {
                     "id" : "bed",
@@ -29,42 +29,43 @@ let gamedata = {
     },
 
     "player" : {
-        "name" : "我",
+        "name" : "",
         "location" : {},
         "items" : [],
-        "tasks" : []
+        "tasks" : [],
+        "knownLocation" : []
     },
 
     "tasks" : {
-        "tutorial-0" : {
-            "name" : "包里有东西",
-            "detail" : "使用 inv 来查看自己的随身物品。",
-            "dialogueWhenAccept" : "口袋里好像有什么东西，赶紧看看吧。",
-            "location" : "tutorial",
-            "requirement" : "inv",
-            "next" : "tutorial-1"
+        "tutorial-whoami" : {
+            "name" : "灵魂三问",
+            "detail" : "使用 whoami 命令来回答灵魂三问。",
+            "dialogueWhenAccept" : "我是谁？我在哪？我要做什么？",
+            "dialogueWhenFinish" : "没想到我连自己的名字都想不起来……算了，先看看这里是什么地方吧",
+            "location" : "travellers_room",
+            "requirement" : "whoami",
+            "next" : "tutorial-look"
         },
-        "tutorial-1" : {
-            "name" : "一本奇怪的书",
+        "tutorial-read" : {
+            "name" : "墙上的字条",
             "detail" : "使用 read 命令来阅读书籍。",
-            "dialogueWhenAccept" : "不知道这是甚么书，先读读看吧。",
-            "location" : "tutorial",
-            "requirement" : "read beginners_guide",
-            "next" : "tutorial-2"
+            "dialogueWhenAccept" : "墙上好像有张字条，不知道是谁写的，先读读看吧。",
+            "location" : "travellers_room",
+            "requirement" : "read note",
+            "next" : "tutorial-get"
         },
-        "tutorial-2" : {
+        "tutorial-look" : {
             "name" : "观察周围",
             "detail" : "使用 look 命令来到处看看。",
-            "location" : "tutorial",
+            "location" : "travellers_room",
             "requirement" : "look",
-            "next" : "tutorial-3"
+            "next" : "tutorial-read"
         },
-        "tutorial-3" : {
-            "name" : "寻找武器",
-            "detail" : "找到并且取走房间里的剑。",
-            "location" : "tutorial",
-            "requirement" : "get sword from chest",
-            // "next" : "tutorial-3"
+        "tutorial-get" : {
+            "name" : "填饱肚子",
+            "detail" : "到房间外的架子上拿吃的。",
+            "location" : "firstTown_hotel_corridor"
+            //"requirement" : "get sword from chest",
         },
         
     },
@@ -88,15 +89,19 @@ let gamedata = {
         "chest" : "箱",
         "bed" : "床",
         "sword" : "剑",
-        "beginners_guide" : "新手引导书"
+        "note" : "字条"
     },
 
     "uniqueItem" : {
-        "beginners_guide" : {
-            "id" : "beginners_guide",
+        "tutorial_letter_to_traveller" : {
+            "id" : "note",
             "carriable" : true,
-            "attributes" : [
-                "delicate"
+            "content" : [
+                "#给流浪者的一封信：",
+                "这里是为无家可归的人准备的容身之所，在这里休息不需要支付任何费用。",
+                "每天早晨，我会把前一天剩下的食物放在门外走廊的架子上，这些食物也是免费的。",
+                "只要遵守规矩别捣乱，你就可以一直住在这里。",
+                "@旅店老板"
             ]
         }
     },

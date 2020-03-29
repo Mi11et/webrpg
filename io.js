@@ -60,7 +60,7 @@ function pterr() {
         outBuf += val;
     };
     let outs = Array.from(arguments);
-    put("错误：");
+    put(" ❌ ");
     for (i of outs) {
         put(i);
         put(' ');
@@ -86,13 +86,15 @@ function getCommand(inputString) {
     let command = inputString.split(' ');
     let result;
     if (commandsList[command[0]] === undefined) {
-        pterr("命令", command[0], "不存在");
+        pterr("你要做什么？");
         result = false;
     } else {
         result = commandsList[command.shift()](command);
     }
     document.getElementById("output").value += '\n';
-    if (result && checkTasks(inputString)) document.getElementById("output").value += '\n';
+    if ((result || result === undefined) && checkTasks(inputString)) {
+        document.getElementById("output").value += '\n';
+    }
     document.getElementById("output").scrollTop = 
         document.getElementById("output").scrollHeight;
     return;

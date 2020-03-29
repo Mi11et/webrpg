@@ -13,7 +13,7 @@ let commandsList = {
         if (gamedata.helpText.hasOwnProperty(commandToQuery)) {
             pt(commandToQuery, "命令的使用方法如下：");
             for (i in gamedata.helpText[commandToQuery]) {
-                pt(indent(i, "4##16#") + gamedata.helpText[commandToQuery][i])
+                pt(indent(i, "4##16#4") + gamedata.helpText[commandToQuery][i])
             }
             return true;
         } else {
@@ -70,6 +70,35 @@ let commandsList = {
             }
         }
         return true;
+    },
+    "whoami" :　function() {
+        if (arguments[0].length > 0) {
+            pterr("参数过多。");
+            return false;
+        }
+        pt("=== 角色信息 ===============");
+        pt(indent("名字", "4##10#2") + gamedata.player.name);
+        return true;
+    },
+    "read" : function() {
+        let target = "";
+        for (i of arguments[0]) {
+            target += " " + i;
+        }
+        target = target.substring(1);
+        let range = [].concat(gamedata.player.items).concat(gamedata.player.location.items);
+        for (i of range) {
+            if (i.id === target) {
+                if (!i.hasOwnProperty("content")) {
+                    pterr(target, "没什么好读的。")
+                }
+                pt(readContent(i));
+                return true;
+            }
+        }
+        pt("这里没有", target, "。");
+        return false;
+
     }
 }
 
@@ -79,6 +108,9 @@ function checkTasks(playerAction) {
         if (playerAction === gamedata.player.tasks[taskIndex].requirement
                 && gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]) {
             pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
+            if (gamedata.player.tasks[taskIndex].hasOwnProperty("dialogueWhenFinish")) {
+                characterSpeak("me", gamedata.player.tasks[taskIndex].dialogueWhenFinish);
+            }
             if (gamedata.player.tasks[taskIndex].hasOwnProperty("next")) {
                 playerAddTask(gamedata.player.tasks[taskIndex].next);
                 pt("新的任务【" + gamedata.tasks[gamedata.player.tasks[taskIndex].next].name + "】已追加。");
@@ -97,7 +129,13 @@ function gameInit() {
 }
 
 function characterSpeak(speaker, speech) {
-    pt("【" + speaker.name + "】" + speech);
+    // 某个人说了某句话
+    // speaker 参数不一定是一个角色，也可以是字符串 "me" ，表示玩家自己说了什么
+    if (speaker === "me") {
+        pt("【我】" + speech);
+    } else {
+        pt("【" + speaker.name + "】" + speech);
+    }
     return;
 }
 
@@ -116,18 +154,27 @@ function playerAddTask(taskName) {
         return;
     }
     gamedata.player.tasks.push(gamedata.tasks[taskName]);
-    characterSpeak(gamedata.player, gamedata.tasks[taskName].dialogueWhenAccept);
+    if (gamedata.tasks[taskName].hasOwnProperty("dialogueWhenAccept")) {
+        characterSpeak("me", gamedata.tasks[taskName].dialogueWhenAccept);
+    }
     return;
 }
 
 function startTutorial() {
-    playerMove("tutorial");
-    gamedata.player.items.push(gamedata.uniqueItem["beginners_guide"]);
-    playerAddTask("tutorial-0")
+    playerMove("travellers_room");
+    gamedata.player.name = "？？？";
+    gamedata.player.items.push(gamedata.uniqueItem["tutorial_letter_to_traveller"]);
+    playerAddTask("tutorial-whoami")
 }
 
 function describeLocation() {
-    pt("这里是" + gamedata.player.location.name + "。");
+    let locationName = "";
+    if (gamedata.player.knownLocation.hasOwnProperty(gamedata.player.location)) {
+        locationName = gamedata.player.location.name;
+    } else {
+        locationName = "陌生的地方";
+    }
+    pt("这里是" + locationName + "。");
     pt(gamedata.player.location.detail);
     pt("这里有：");
     for (i of gamedata.player.location.items) {
@@ -159,12 +206,32 @@ function describeItem(item, type) {
             }
         }
         res += itemName() + '。';
+        // 物品是一个容器
         if (item.hasOwnProperty("items")) {
             res += "里面有：\n";
             for (i of item.items) {
                 res += indent(describeItem(i, 0), "4###");
             }
         }
+        // 物品上有可以阅读的内容
+        if (item.hasOwnProperty("content")) {
+            res += "输入 read 来阅读其中的内容。";
+        }
     }
     return res;
+}
+
+function readContent(itemToRead) {
+    let textList = itemToRead.content;
+    let formattedContent = "";
+    for (i of textList) {
+        if (i[0] == '#') {
+            formattedContent += indent(i.substring(1), "8###") + '\n';
+        } else if (i[0] == '@') {
+            formattedContent += indent("——" + i.substring(1), "4###") + '\n';
+        } else {
+            formattedContent += indent(i.substring(1), "4###") + '\n';
+        }
+    }
+    return formattedContent;
 }
