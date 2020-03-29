@@ -8,21 +8,6 @@ let gamedata = {
                     "id" : "bed",
                     "carriable" : false,
                     "material" : "wood"
-                },
-                {
-                    "id" : "chest",
-                    "carriable" : false,
-                    "material" : "wood",
-                    "items" : [
-                        {
-                            "id" : "sword",
-                            "material" : "wood",
-                            "carriable" : true,
-                            "attributes" : [
-                                "training"
-                            ]
-                        }
-                    ]
                 }
             ]
         }

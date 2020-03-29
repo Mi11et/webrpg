@@ -228,9 +228,9 @@ function readContent(itemToRead) {
         if (i[0] == '#') {
             formattedContent += indent(i.substring(1), "8###") + '\n';
         } else if (i[0] == '@') {
-            formattedContent += indent("——" + i.substring(1), "4###") + '\n';
+            formattedContent += indent("——" + i.substring(1), "8###") + '\n';
         } else {
-            formattedContent += indent(i.substring(1), "4###") + '\n';
+            formattedContent += indent(i, "4###") + '\n';
         }
     }
     return formattedContent;
