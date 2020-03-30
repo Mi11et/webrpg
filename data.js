@@ -54,7 +54,7 @@ let gamedata = {
             "detail" : "使用 whoami 命令来回答灵魂三问。",
             "dialogueWhenAccept" : "我是谁？我在哪？我要做什么？",
             "dialogueWhenFinish" : "没想到我连自己的名字都想不起来……算了，先看看这里是什么地方吧",
-            "location" : "travellers_room",
+            "location" : "firstTown_hotel_travellers_room",
             "requirement" : "whoami",
             "next" : "tutorial-look"
         },
@@ -62,14 +62,14 @@ let gamedata = {
             "name" : "墙上的字条",
             "detail" : "使用 read 命令来阅读书籍。",
             "dialogueWhenAccept" : "墙上好像有张字条，不知道是谁写的，先读读看吧。",
-            "location" : "travellers_room",
+            "location" : "firstTown_hotel_travellers_room",
             "requirement" : "read note",
             "next" : "tutorial-get",
         },
         "tutorial-look" : {
             "name" : "观察周围",
             "detail" : "使用 look 命令来到处看看。",
-            "location" : "travellers_room",
+            "location" : "firstTown_hotel_travellers_room",
             "requirement" : "look",
             "next" : "tutorial-read"
         },
