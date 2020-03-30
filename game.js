@@ -100,8 +100,11 @@ let commandsList = {
         }
         pt("这里没有", target, "。");
         return false;
-
-    }
+    },
+    "move" : function() {
+        playerStartMoving();
+    },
+    "m" : "move"
 }
 
 function checkTasks(playerAction) {
@@ -153,10 +156,13 @@ function characterSpeak(speaker, speech) {
     return;
 }
 
-function playerMove(dest) {
+function playerMove(dest, recognize = true) {
     // 将玩家移动到某一个地点
     if (gamedata.map.hasOwnProperty(dest) === false) {
         return;
+    }
+    if (recognize) {
+        playerRecognize(dest);
     }
     gamedata.player.location = gamedata.map[dest];
     describeLocation();
@@ -177,7 +183,7 @@ function playerAddTask(taskName) {
 }
 
 function startTutorial() {
-    playerMove("travellers_room");
+    playerMove("firstTown_hotel_travellers_room", false);
     gamedata.player.name = "？？？";
     playerAddTask("tutorial-whoami")
 }
@@ -192,9 +198,11 @@ function describeLocation() {
     }
     pt("这里是" + locationName + "。");
     pt(gamedata.player.location.detail);
-    pt("这里有：");
-    for (i in gamedata.player.location.items) {
-        pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
+    if (gamedata.player.location.hasOwnProperty("items")) {
+        pt("这里有：");
+        for (i in gamedata.player.location.items) {
+            pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 let gamedata = {
     "map" : {
-        "travellers_room" : {
-            "id" : "travellers_room",
+        "firstTown_hotel_travellers_room" : {
+            "id" : "firstTown_hotel_travellers_room",
             "name" : "流浪者的房间",
             "detail" : "提示：使用 task 命令来看看下一步要做什么。\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
             "items" : {
@@ -19,9 +19,20 @@ let gamedata = {
                         "每天早晨，我会把前一天剩下的食物放在门外走廊的架子上，这些食物也是免费的。",
                         "只要遵守规矩别捣乱，你就可以一直住在这里。",
                         "@旅店老板",
-                        "$playerRecognize(\"travellers_room\");"
+                        "$playerRecognize(\"firstTown_hotel_travellers_room\");"
                     ]
                 }
+            },
+            "near" : {
+                "down" : "firstTown_hotel_corridor"
+            }
+        },
+        "firstTown_hotel_corridor" : {
+            "id" : "firstTown_hotel_corridor",
+            "name" : "旅店的走廊",
+            "detail" : "周围很安静。隐约可以闻到不远处的食堂传来的饭菜香味。",
+            "near" : {
+                "up" : "firstTown_hotel_travellers_room"
             }
         }
     },
@@ -31,7 +42,10 @@ let gamedata = {
         "location" : {},
         "items" : [],
         "tasks" : [],
-        "knownLocation" : []
+        "knownLocation" : [],
+        "status" : {
+            "moving" : false
+        }
     },
 
     "tasks" : {

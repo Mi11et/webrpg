@@ -89,23 +89,76 @@ function getCommand(inputString) {
         pterr("你要做什么？");
         result = false;
     } else {
-        result = commandsList[command.shift()](command);
+        let commandName = commandsList[command.shift()];
+        if (commandName.toString() === commandName) {
+            commandName = commandsList[commandName];
+        }
+        result = commandName(command);
     }
     document.getElementById("output").value += '\n';
     if ((result || result === undefined) && checkTasks(inputString)) {
         document.getElementById("output").value += '\n';
     }
+    // 自动滚动
     document.getElementById("output").scrollTop = 
         document.getElementById("output").scrollHeight;
     return;
 }
 
+function playerStartMoving() {
+    document.getElementById("input").readOnly = "readonly";
+    document.getElementById("input").value = "移动中，按 m 停止移动";
+    document.getElementById("input").style.textAlign = "center";
+    gamedata.player.status.moving = true;
+    return;
+}
+
+function playerEndMoving() {
+    document.getElementById("input").readOnly = "";
+    document.getElementById("input").value = "";
+    document.getElementById("input").style.textAlign = "left";
+    gamedata.player.status.moving = false;
+    return;
+}
+
 function onReturn() {
-    // 传递命令
+    // 移动模式
+    let moveNear = function(dest) {
+        if (gamedata.player.location.near.hasOwnProperty(dest)) {
+            playerMove(gamedata.player.location.near[dest]);
+        }
+        // 自动滚动
+        document.getElementById("output").scrollTop = 
+            document.getElementById("output").scrollHeight;
+        return;
+    }
+    if (gamedata.player.status.moving) {
+        event.preventDefault();
+        switch (event.keyCode) {
+            case 87: {
+                moveNear("up"); break; // w
+            }
+            case 65: {
+                moveNear("left"); break; // a
+            }
+            case 83: {
+                moveNear("down"); break; // s
+            }
+            case 68: {
+                moveNear("right"); break; // d
+            }
+            case 77: {
+                playerEndMoving(); break; // m
+            }
+        }
+        return;
+    }
+    // 在非移动模式下，按下回车后传递命令
     if (event.keyCode === 13) {
         event.preventDefault();
-        getCommand(document.getElementById("input").value);
+        let inputString = document.getElementById("input").value;
         document.getElementById("input").value = "";
+        getCommand(inputString);
         return;
     }
 }
