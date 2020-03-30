@@ -60,7 +60,7 @@ function pterr() {
         outBuf += val;
     };
     let outs = Array.from(arguments);
-    put(" ❌ ");
+    // put(" ❌ ");
     for (i of outs) {
         put(i);
         put(' ');

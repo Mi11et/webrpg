@@ -107,6 +107,9 @@ let gamedata = {
         },
         "whoami" : {
             "whoami" : "查看玩家信息。"
+        },
+        "read" : {
+            "read + 对象" : "阅读某一物品上的文字。"
         }
     }
 }

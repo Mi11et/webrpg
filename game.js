@@ -154,6 +154,7 @@ function characterSpeak(speaker, speech) {
 }
 
 function playerMove(dest) {
+    // 将玩家移动到某一个地点
     if (gamedata.map.hasOwnProperty(dest) === false) {
         return;
     }
@@ -164,6 +165,7 @@ function playerMove(dest) {
 }
 
 function playerAddTask(taskName) {
+    // 给玩家增加一项任务
     if (gamedata.tasks.hasOwnProperty(taskName) === false) {
         return;
     }
@@ -181,6 +183,7 @@ function startTutorial() {
 }
 
 function describeLocation() {
+    // 描述玩家所在的地点
     let locationName = "";
     if (gamedata.player.knownLocation.includes(gamedata.player.location.id)) {
         locationName = gamedata.player.location.name;
@@ -200,7 +203,7 @@ function describeItem(item, type) {
     // type 参数为 0 或 1 分别表示简短描述和详细描述。
     let res = "";
     let itemName = function() {
-        itemMaterial = item.hasOwnProperty("material") ? gamedata.material[item.material].name : "";
+        let itemMaterial = item.hasOwnProperty("material") ? gamedata.material[item.material].name : "";
         return itemMaterial + gamedata.names[item.id] + '（' + item.id + '）';
     }
     if (type === 0) {
@@ -228,7 +231,7 @@ function describeItem(item, type) {
         }
         // 物品上有可以阅读的内容
         if (item.hasOwnProperty("content")) {
-            res += "输入 read 来阅读其中的内容。";
+            res += "使用 read 来阅读其中的内容。";
         }
     }
     return res;
@@ -239,10 +242,13 @@ function readContent(itemToRead) {
     let formattedContent = describeItem(itemToRead, 0) + "中如此写着：";
     for (i of textList) {
         if (i[0] == '#') {
+            // 以 # 开头为标题
             formattedContent += '\n' + indent(i.substring(1), "8###");
         } else if (i[0] == '@') {
+            // 以 @ 开头为落款
             formattedContent += '\n' + indent("——" + i.substring(1), "8###");
         } else if (i[0] == '$') {
+            // 以 $ 开头为阅读文件后执行的命令
             eval(i.substring(1));
         } else {
             formattedContent += '\n' + indent(i, "4###");
