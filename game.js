@@ -6,10 +6,28 @@ let commandsList = {
         }
         let commandToQuery = "";
         if (arguments[0].length === 0) {
-            commandToQuery = "help";
-        } else {
-            commandToQuery = arguments[0][0];
+            pt("所有可用的命令如下，使用 help + 命令 来查看详细的使用方法。")
+            let outputBuf = [];
+            let printBuf = () => {
+                let buf = "";
+                for (j of outputBuf) {
+                    buf += indent(j, "##16#");
+                }
+                pt("  " + buf);
+                return;
+            }
+            for (i in commandsList) {
+                if (typeof commandsList[i] === "string") continue;
+                outputBuf.push(i);
+                if (outputBuf.length === 4) {
+                    printBuf();
+                    outputBuf = [];
+                }
+            }
+            printBuf();
+            return true;
         }
+        commandToQuery = arguments[0][0];
         if (gamedata.helpText.hasOwnProperty(commandToQuery)) {
             pt(commandToQuery, "命令的使用方法如下：");
             for (i in gamedata.helpText[commandToQuery]) {
@@ -82,6 +100,10 @@ let commandsList = {
         return true;
     },
     "read" : function() {
+        if (arguments[0].length === 0) {
+            pterr("你要读什么？");
+            return false;
+        }
         let target = "";
         for (i of arguments[0]) {
             target += " " + i;
@@ -111,7 +133,8 @@ function checkTasks(playerAction) {
     let taskFinishFlag = false;
     for (taskIndex in gamedata.player.tasks) {
         if (playerAction === gamedata.player.tasks[taskIndex].requirement
-                && gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]) {
+                && (gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]
+                    || gamedata.player.tasks[taskIndex].location === "any")) {
             pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
             if (gamedata.player.tasks[taskIndex].hasOwnProperty("dialogueWhenFinish")) {
                 characterSpeak("me", gamedata.player.tasks[taskIndex].dialogueWhenFinish);
@@ -131,6 +154,10 @@ function checkTasks(playerAction) {
 }
 
 function playerRecognize() {
+    // 将若干个地点添加到玩家认识的地点列表中
+    // 默认情况下，主动移动到某一个地点会让玩家自动认识这个地点
+    // 当玩家（由于剧情或者别的原因）被带到某一个地方，
+    // 需要寻找线索来认识这个地方的时候才要用到这个方法
     for (let i = 0; i < arguments.length; ++i) {
         if (gamedata.map.hasOwnProperty(arguments[i])) {
             gamedata.player.knownLocation.push(arguments[i]);
@@ -140,6 +167,7 @@ function playerRecognize() {
 }
 
 function gameInit() {
+    // 暂时没有用
     pt("这是一个命令行冒险游戏。");
     pt("输入 start new 开始一场新的冒险。");
     return;
@@ -148,10 +176,15 @@ function gameInit() {
 function characterSpeak(speaker, speech) {
     // 某个人说了某句话
     // speaker 参数不一定是一个角色，也可以是字符串 "me" ，表示玩家自己说了什么
+    let speeches = speech.split('\n');
     if (speaker === "me") {
-        pt("【我】" + speech);
+        for (i of speeches) {
+            pt("【我】" + i);
+        }
     } else {
-        pt("【" + speaker.name + "】" + speech);
+        for (i of speeches) {
+            pt("【" + speaker.name + "】" + i);
+        }
     }
     return;
 }

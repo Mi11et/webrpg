@@ -54,14 +54,14 @@ let gamedata = {
             "detail" : "使用 whoami 命令来回答灵魂三问。",
             "dialogueWhenAccept" : "我是谁？我在哪？我要做什么？",
             "dialogueWhenFinish" : "没想到我连自己的名字都想不起来……算了，先看看这里是什么地方吧",
-            "location" : "firstTown_hotel_travellers_room",
+            "location" : "any",
             "requirement" : "whoami",
             "next" : "tutorial-look"
         },
         "tutorial-read" : {
             "name" : "墙上的字条",
             "detail" : "使用 read 命令来阅读书籍。",
-            "dialogueWhenAccept" : "墙上好像有张字条，不知道是谁写的，先读读看吧。",
+            "dialogueWhenAccept" : "总而言之，赶紧看看字条里写了什么吧",
             "location" : "firstTown_hotel_travellers_room",
             "requirement" : "read note",
             "next" : "tutorial-get",
@@ -71,6 +71,14 @@ let gamedata = {
             "detail" : "使用 look 命令来到处看看。",
             "location" : "firstTown_hotel_travellers_room",
             "requirement" : "look",
+            "next" : "tutorial-help"
+        },
+        "tutorial-help" : {
+            "name" : "查看帮助",
+            "detail" : "使用 help read 来查看 read 命令的使用方法。",
+            "dialogueWhenAccept" : "墙上好像有张字条，用 read 命令读读看吧。\n……\nread 命令怎么用来着？",
+            "location" : "any",
+            "requirement" : "help read",
             "next" : "tutorial-read"
         },
         "tutorial-get" : {
@@ -124,6 +132,9 @@ let gamedata = {
         },
         "read" : {
             "read + 对象" : "阅读某一物品上的文字。"
+        },
+        "move" : {
+            "move（或缩写 m ）" : "进入移动模式。移动完成后按下 m 停止移动。"
         }
     }
 }

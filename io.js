@@ -90,7 +90,7 @@ function getCommand(inputString) {
         result = false;
     } else {
         let commandName = commandsList[command.shift()];
-        if (commandName.toString() === commandName) {
+        if (typeof commandName === "string") {
             commandName = commandsList[commandName];
         }
         result = commandName(command);
