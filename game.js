@@ -64,6 +64,10 @@ let commandsList = {
     },
     "inv" : function() {
         if (arguments[0].length === 0) {
+            if (gamedata.player.items.length === 0) {
+                pt("你身上什么也没有。");
+                return true;
+            }
             pt("你看了看你的口袋。");
             pt("里面有：");
             for (i of gamedata.player.items) {
@@ -231,7 +235,8 @@ function describeLocation() {
     }
     pt("这里是" + locationName + "。");
     pt(gamedata.player.location.detail);
-    if (gamedata.player.location.hasOwnProperty("items")) {
+    if (gamedata.player.location.hasOwnProperty("items")
+        && gamedata.player.location.items.length !== 0) {
         pt("这里有：");
         for (i in gamedata.player.location.items) {
             pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
