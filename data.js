@@ -3,7 +3,7 @@ let gamedata = {
         "firstTown_hotel_travellers_room" : {
             "id" : "firstTown_hotel_travellers_room",
             "name" : "流浪者的房间",
-            "detail" : "提示：使用 task 命令来看看下一步要做什么。\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
+            "detail" : "提示：使用 task 命令来看看下一步要做什么。\n使用 help 来查看所有命令\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
             "items" : {
                 "bed" : {
                     "id" : "bed",
