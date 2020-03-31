@@ -101,6 +101,8 @@ let commandsList = {
         }
         pt("=== 角色信息 ===============");
         pt(indent("名字", "4##10#2") + gamedata.player.name);
+        pt(indent("生命值", "4##10#2") + gamedata.player.health);
+        pt(indent("饥饿值", "4##10#2") + gamedata.player.hunger);
         return true;
     },
     "read" : function() {
@@ -130,7 +132,16 @@ let commandsList = {
     "move" : function() {
         playerStartMoving();
     },
-    "m" : "move"
+    "m" : "move",
+    "say" : function() {
+        let target = "";
+        for (i of arguments[0]) {
+            target += " " + i;
+        }
+        target = target.substring(1);
+        characterSpeak("me", target);
+        return true;
+    }
 }
 
 function checkTasks(playerAction) {

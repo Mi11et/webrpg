@@ -45,7 +45,9 @@ let gamedata = {
         "knownLocation" : [],
         "status" : {
             "moving" : false
-        }
+        },
+        "health" : 100,
+        "hunger" : 100
     },
 
     "tasks" : {
@@ -135,6 +137,9 @@ let gamedata = {
         },
         "move" : {
             "move（或缩写 m ）" : "进入移动模式。移动完成后按下 m 停止移动。"
+        },
+        "say" : {
+            "say + 内容" : "说一句话"
         }
     }
 }
