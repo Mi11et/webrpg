@@ -4,13 +4,13 @@ let gamedata = {
             "id" : "firstTown_hotel_travellers_room",
             "name" : "流浪者的房间",
             "detail" : "提示：使用 task 命令来看看下一步要做什么。\n使用 help 来查看所有命令\n如果对命令不熟悉，可以输入 help + 命令 来查看帮助。",
-            "items" : {
-                "bed" : {
+            "items" : [
+                {
                     "id" : "bed",
                     "carriable" : false,
                     "material" : "wood"
                 },
-                "tutorial_letter_to_traveller" : {
+                {
                     "id" : "note",
                     "carriable" : false,
                     "content" : [
@@ -22,7 +22,7 @@ let gamedata = {
                         "$playerRecognize(\"firstTown_hotel_travellers_room\");"
                     ]
                 }
-            },
+            ],
             "near" : {
                 "down" : "firstTown_hotel_corridor"
             }
@@ -31,6 +31,21 @@ let gamedata = {
             "id" : "firstTown_hotel_corridor",
             "name" : "旅店的走廊",
             "detail" : "周围很安静。隐约可以闻到不远处的食堂传来的饭菜香味。",
+            "items" : [
+                {
+                    "id" : "shelf",
+                    "material" : "wood",
+                    "carriable" : false,
+                    "items" : [
+                        {
+                            "id" : "bread",
+                            "eatable" : true,
+                            "carriable" : true,
+                            "nutrition" : 30
+                        }
+                    ]
+                }
+            ],
             "near" : {
                 "up" : "firstTown_hotel_travellers_room"
             }
@@ -62,7 +77,7 @@ let gamedata = {
         },
         "tutorial-read" : {
             "name" : "墙上的字条",
-            "detail" : "使用 read 命令来阅读书籍。",
+            "detail" : "使用 read 命令来阅读文字。",
             "dialogueWhenAccept" : "总而言之，赶紧看看字条里写了什么吧",
             "location" : "firstTown_hotel_travellers_room",
             "requirement" : "read note",
@@ -111,7 +126,9 @@ let gamedata = {
         "chest" : "箱",
         "bed" : "床",
         "sword" : "剑",
-        "note" : "字条"
+        "note" : "字条",
+        "bread" : "面包",
+        "shelf" : "架"
     },
 
     "helpText" : {

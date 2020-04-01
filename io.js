@@ -18,7 +18,7 @@ function indent(targetString, formatString) {
     let tab = function(spaceLength) {
         if (spaceLength <= 0) return "";
         let res = "";
-        for (spaceCnt = 0; spaceCnt < spaceLength; spaceCnt++) {
+        for (let spaceCnt = 0; spaceCnt < spaceLength; spaceCnt++) {
             res += " ";
         }
         return res;
@@ -43,7 +43,7 @@ function pt() {
     };
     if (arguments.length > 0) {
         let outs = Array.from(arguments);
-        for (i of outs) {
+        for (let i of outs) {
             put(i);
             put(' ');
         }
@@ -61,7 +61,7 @@ function pterr() {
     };
     let outs = Array.from(arguments);
     // put(" ❌ ");
-    for (i of outs) {
+    for (let i of outs) {
         put(i);
         put(' ');
     };
@@ -74,7 +74,7 @@ function getCommand(inputString) {
     // 调用命令
     let command = inputString.split(' ');
     let emptyElement = [];
-    for (i in command) {
+    for (let i in command) {
         if (command[i] == "") emptyElement.push(i);
     }
     while (emptyElement.length) {

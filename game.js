@@ -10,13 +10,13 @@ let commandsList = {
             let outputBuf = [];
             let printBuf = () => {
                 let buf = "";
-                for (j of outputBuf) {
+                for (let j of outputBuf) {
                     buf += indent(j, "##16#");
                 }
                 pt("  " + buf);
                 return;
             }
-            for (i in commandsList) {
+            for (let i in commandsList) {
                 if (typeof commandsList[i] === "string") continue;
                 outputBuf.push(i);
                 if (outputBuf.length === 4) {
@@ -30,7 +30,7 @@ let commandsList = {
         commandToQuery = arguments[0][0];
         if (gamedata.helpText.hasOwnProperty(commandToQuery)) {
             pt(commandToQuery, "命令的使用方法如下：");
-            for (i in gamedata.helpText[commandToQuery]) {
+            for (let i in gamedata.helpText[commandToQuery]) {
                 pt(indent(i, "4##16#4") + gamedata.helpText[commandToQuery][i])
             }
             return true;
@@ -46,13 +46,13 @@ let commandsList = {
             return true;
         } else {
             let target = "";
-            for (i of arguments[0]) {
+            for (let i of arguments[0]) {
                 target += " " + i;
             }
             target = target.substring(1);
             let range = {};
             Object.assign(range, gamedata.player.items, gamedata.player.location.items);
-            for (i in range) {
+            for (let i in range) {
                 if (range[i].id === target) {
                     pt(describeItem(range[i], 1));
                     return true;
@@ -70,7 +70,7 @@ let commandsList = {
             }
             pt("你看了看你的口袋。");
             pt("里面有：");
-            for (i of gamedata.player.items) {
+            for (let i of gamedata.player.items) {
                 pt(indent(describeItem(i, 0), "4###"));
             }
             return true;
@@ -88,7 +88,7 @@ let commandsList = {
         if (gamedata.player.tasks.length === 0) {
             pt(indent("你现在没有要做的事。", "4###"));
         } else {
-            for (i of gamedata.player.tasks) {
+            for (let i of gamedata.player.tasks) {
                 pt(indent('【' + i.name + '】' + i.detail, "4###"));
             }
         }
@@ -111,13 +111,13 @@ let commandsList = {
             return false;
         }
         let target = "";
-        for (i of arguments[0]) {
+        for (let i of arguments[0]) {
             target += " " + i;
         }
         target = target.substring(1);
         let range = {};
         Object.assign(range, gamedata.player.items, gamedata.player.location.items);
-        for (i in range) {
+        for (let i in range) {
             if (range[i].id === target) {
                 if (!range[i].hasOwnProperty("content")) {
                     pterr(target, "没什么好读的。")
@@ -135,7 +135,7 @@ let commandsList = {
     "m" : "move",
     "say" : function() {
         let target = "";
-        for (i of arguments[0]) {
+        for (let i of arguments[0]) {
             target += " " + i;
         }
         if (target === "") {
@@ -145,12 +145,75 @@ let commandsList = {
         target = target.substring(1);
         characterSpeak("me", target);
         return true;
+    },
+    "get" : function() {
+        let target = "", source = "", sourceFlag = false;
+        for (let i = 0; i < arguments[0].length; ++i) {
+            if (arguments[0][i] === "from") {
+                sourceFlag = true;
+                for (let j = 0; j < i; ++j) {
+                    target += " " + arguments[0][j];
+                }
+                for (let j = i + 1; j < arguments[0].length; ++j) {
+                    source += " " + arguments[0][j];
+                }
+            }
+        }
+        if (target === "") {
+            pterr("你要拿什么？");
+            return false;
+        }
+        if (sourceFlag && source === "") {
+            pterr("你要从哪里拿？");
+            return false;
+        }
+        target = target.substring(1);
+        source = source.substring(1);
+        if (sourceFlag) {
+            let sourceRange = gamedata.player.location.items;
+            for (let i of sourceRange) {
+                if (i.id === source) {
+                    if (!i.hasOwnProperty("items")
+                        || i.items.length === 0) {
+                        pterr(source, "里什么也没有。");
+                    }
+                    for (let j in i.items) {
+                        if (i.items[j].id === target) {
+                            gamedata.player.items.push(i.items[j]);
+                            pt("你拿起了" + describeItem(i.items[j], 0));
+                            console.log(i);
+                            i.items.splice(j, 1);
+                            console.log(i);
+                            return true;
+                        }
+                    }
+                    pt(source, "里没有", target, "。");
+                    return false;
+                }
+            }
+            pt("这里没有", source, "。");
+            return false;
+        } else {
+            let range = {};
+            Object.assign(range, gamedata.player.items, gamedata.player.location.items);
+            for (let i in range) {
+                if (range[i].id === source) {
+                    if (!range[i].hasOwnProperty("content")) {
+                        pterr(target, "没什么好读的。")
+                    }
+                    pt(readContent(range[i]));
+                    return true;
+                }
+            }
+            pt("这里没有", target, "。");
+            return false;
+        }
     }
 }
 
 function checkTasks(playerAction) {
     let taskFinishFlag = false;
-    for (taskIndex in gamedata.player.tasks) {
+    for (let taskIndex in gamedata.player.tasks) {
         if (playerAction === gamedata.player.tasks[taskIndex].requirement
                 && (gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]
                     || gamedata.player.tasks[taskIndex].location === "any")) {
@@ -197,11 +260,11 @@ function characterSpeak(speaker, speech) {
     // speaker 参数不一定是一个角色，也可以是字符串 "me" ，表示玩家自己说了什么
     let speeches = speech.split('\n');
     if (speaker === "me") {
-        for (i of speeches) {
+        for (let i of speeches) {
             pt("【我】" + i);
         }
     } else {
-        for (i of speeches) {
+        for (let i of speeches) {
             pt("【" + speaker.name + "】" + i);
         }
     }
@@ -253,7 +316,7 @@ function describeLocation() {
     if (gamedata.player.location.hasOwnProperty("items")
         && gamedata.player.location.items.length !== 0) {
         pt("这里有：");
-        for (i in gamedata.player.location.items) {
+        for (let i in gamedata.player.location.items) {
             pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
         }
     }
@@ -269,7 +332,7 @@ function describeItem(item, type) {
     }
     if (type === 0) {
         if (item.hasOwnProperty("attributes")) {
-            for (i of item.attributes) {
+            for (let i of item.attributes) {
                 res += gamedata.attribute[i].name + "的";
             }
         }
@@ -278,15 +341,15 @@ function describeItem(item, type) {
     if (type === 1) {
         res = "这是";
         if (item.hasOwnProperty("attributes")) {
-            for (i of item.attributes) {
+            for (let i of item.attributes) {
                 res += gamedata.attribute[i].name + "的";
             }
         }
         res += itemName() + '。';
         // 物品是一个容器
-        if (item.hasOwnProperty("items")) {
+        if (item.hasOwnProperty("items") && item.items.length) {
             res += "里面有：\n";
-            for (i of item.items) {
+            for (let i of item.items) {
                 res += indent(describeItem(i, 0), "4###");
             }
         }
@@ -301,7 +364,7 @@ function describeItem(item, type) {
 function readContent(itemToRead) {
     let textList = itemToRead.content;
     let formattedContent = describeItem(itemToRead, 0) + "中如此写着：";
-    for (i of textList) {
+    for (let i of textList) {
         if (i[0] == '#') {
             // 以 # 开头为标题
             formattedContent += '\n' + indent(i.substring(1), "8###");
