@@ -44,6 +44,12 @@ let gamedata = {
                             "nutrition" : 30
                         }
                     ]
+                },
+                {
+                    "id" : "bread",
+                    "eatable" : true,
+                    "carriable" : true,
+                    "nutrition" : 30
                 }
             ],
             "near" : {
@@ -62,7 +68,7 @@ let gamedata = {
             "moving" : false
         },
         "health" : 100,
-        "hunger" : 100
+        "hunger" : 10
     },
 
     "tasks" : {

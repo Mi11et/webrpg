@@ -151,12 +151,12 @@ let commandsList = {
         for (let i = 0; i < arguments[0].length; ++i) {
             if (arguments[0][i] === "from") {
                 sourceFlag = true;
-                for (let j = 0; j < i; ++j) {
-                    target += " " + arguments[0][j];
-                }
-                for (let j = i + 1; j < arguments[0].length; ++j) {
-                    source += " " + arguments[0][j];
-                }
+                continue;
+            }
+            if (sourceFlag) {
+                source += " " + arguments[0][i];
+            } else {
+                target += " " + arguments[0][i];
             }
         }
         if (target === "") {
@@ -181,9 +181,7 @@ let commandsList = {
                         if (i.items[j].id === target) {
                             gamedata.player.items.push(i.items[j]);
                             pt("你拿起了" + describeItem(i.items[j], 0));
-                            console.log(i);
                             i.items.splice(j, 1);
-                            console.log(i);
                             return true;
                         }
                     }
@@ -194,14 +192,12 @@ let commandsList = {
             pt("这里没有", source, "。");
             return false;
         } else {
-            let range = {};
-            Object.assign(range, gamedata.player.items, gamedata.player.location.items);
+            let range = gamedata.player.location.items;
             for (let i in range) {
-                if (range[i].id === source) {
-                    if (!range[i].hasOwnProperty("content")) {
-                        pterr(target, "没什么好读的。")
-                    }
-                    pt(readContent(range[i]));
+                if (range[i].id === target) {
+                    gamedata.player.items.push(range[i]);
+                    pt("你拿起了" + describeItem(range[i], 0));
+                    range.splice(i, 1);
                     return true;
                 }
             }
@@ -347,10 +343,14 @@ function describeItem(item, type) {
         }
         res += itemName() + '。';
         // 物品是一个容器
-        if (item.hasOwnProperty("items") && item.items.length) {
-            res += "里面有：\n";
-            for (let i of item.items) {
-                res += indent(describeItem(i, 0), "4###");
+        if (item.hasOwnProperty("items")) {
+            if (item.items.length === 0) {
+                res += "里面什么也没有。\n";
+            } else {
+                res += "里面有：\n";
+                for (let i of item.items) {
+                    res += indent(describeItem(i, 0), "4###");
+                }
             }
         }
         // 物品上有可以阅读的内容
