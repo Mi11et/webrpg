@@ -39,17 +39,15 @@ let gamedata = {
                     "items" : [
                         {
                             "id" : "bread",
-                            "eatable" : true,
+                            "carriable" : true,
+                            "nutrition" : 30
+                        },
+                        {
+                            "id" : "bread",
                             "carriable" : true,
                             "nutrition" : 30
                         }
                     ]
-                },
-                {
-                    "id" : "bread",
-                    "eatable" : true,
-                    "carriable" : true,
-                    "nutrition" : 30
                 }
             ],
             "near" : {

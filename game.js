@@ -204,6 +204,36 @@ let commandsList = {
             pt("这里没有", target, "。");
             return false;
         }
+    },
+    "eat" : function() {
+        if (arguments[0].length === 0) {
+            pterr("你要吃什么？");
+            return false;
+        }
+        if (gamedata.player.hunger >= 100) {
+            pt("你吃不下别的东西了。");
+            return false;
+        }
+        let target = "";
+        for (let i of arguments[0]) {
+            target += " " + i;
+        }
+        target = target.substring(1);
+        let range = gamedata.player.items;
+        for (let i of range) {
+            if (i.id === target) {
+                if (!i.hasOwnProperty("nutrition")) {
+                    pt(describeItem(i, 0) + "不是食物。");
+                    return false;
+                }
+                gamedata.player.hunger += i.nutrition;
+                pt("你吃掉了" + describeItem(i, 0));
+                range.splice(i, 1);
+                return true;
+            }
+        }
+        pt("这里没有", target, "。");
+        return false;
     }
 }
 
