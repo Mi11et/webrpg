@@ -307,7 +307,7 @@ function playerMove(dest, recognize = true) {
     }
     gamedata.player.location = gamedata.map[dest];
     describeLocation();
-    document.getElementById("output").value += '\n';
+    pt();
     return;
 }
 
