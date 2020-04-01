@@ -72,18 +72,15 @@ function pterr() {
 
 function getCommand(inputString) {
     // 调用命令
-    {
-        let tmpString = inputString.replace("  ", " ");
-        while (tmpString !== inputString) {
-            inputString = tmpString;
-            tmpString = inputString.replace("  ", " ");
-        }
-        if (inputString[0] === ' ') {
-            inputString = inputString.substring(1);
-        }
-    }
-    if (inputString === "") return;
     let command = inputString.split(' ');
+    let emptyElement = [];
+    for (i in command) {
+        if (command[i] == "") emptyElement.push(i);
+    }
+    while (emptyElement.length) {
+        command.splice(emptyElement.pop(), 1);
+    }
+    if (command.length === 0) return;
     let result;
     if (commandsList[command[0]] === undefined) {
         pterr("你要做什么？");

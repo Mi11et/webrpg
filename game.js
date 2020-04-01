@@ -138,6 +138,10 @@ let commandsList = {
         for (i of arguments[0]) {
             target += " " + i;
         }
+        if (target === "") {
+            pterr("你要说什么？");
+            return false;
+        }
         target = target.substring(1);
         characterSpeak("me", target);
         return true;
