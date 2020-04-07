@@ -339,11 +339,36 @@ function describeLocation() {
     }
     pt("这里是" + locationName + "。");
     pt(gamedata.player.location.detail);
+    // 描述场景内的物品
     if (gamedata.player.location.hasOwnProperty("items")
         && gamedata.player.location.items.length !== 0) {
         pt("这里有：");
         for (let i in gamedata.player.location.items) {
             pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
+        }
+    }
+    // 描述当前的时间
+    let currentTime = getTime(gamedata.player);
+    if (currentTime[0] != null) {
+        let formatTime = (time) => {
+            time = ((time % 24) + 24) % 24;
+            let hour = Math.floor(time), minute = Math.floor((time - hour) * 60);
+            let result = hour.toString() + "点";
+            return minute ? result + minute.toString() + "分" : result;
+        }
+        switch (currentTime[1]) {
+            case "watch" : {
+                pt("你看了看你的表，现在是" + formatTime(currentTime[0]) + "。");
+                break;
+            }
+            case "clock" : {
+                pt("你看了看钟，现在是" + formatTime(currentTime[0]) + "。");
+                break;
+            }
+            case "sky" : {
+                pt("你看了看天色，现在大概是" + formatTime(currentTime[0]) + "。");
+                break;
+            }
         }
     }
 }
@@ -389,6 +414,36 @@ function describeItem(item, type) {
         }
     }
     return res;
+}
+
+function getTime(character) {
+    // 返回某个角色**认为**当前是什么时间，返回时间和得知时间的方法
+    // 有表先看表（需要把表装备在手臂上，一个人只能戴一块表）
+    // 如果无表，附近有钟，则会看钟（一个地点只能**安放**一个钟）
+    // 如果无表无钟，则会看天色，得到大致的时间
+    // 如果看不了天色，返回 null
+    let haveProperty = (target, prop) => {
+        return target.hasOwnProperty(prop) && target[prop].length;
+    }
+    if (haveProperty(character, "equipment")) {
+        for (let i of character.equipment) {
+            if (i.id === "watch") {
+                return [gamedata.global.time + i.deviation, "watch"];
+            }
+        }
+    }
+    let location = character.location;
+    if (haveProperty(location, "items")) {
+        for (let i of location.items) {
+            if (i.id === "clock" && i.placed) {
+                return [gamedata.global.time + i.deviation, "clock"];
+            }
+        }
+    }
+    if (location.hasOwnProperty("nowindow") && location.nowindow) {
+        return [null, null];
+    }
+    return [Math.round(gamedata.global.time), "sky"];
 }
 
 function readContent(itemToRead) {

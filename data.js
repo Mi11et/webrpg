@@ -21,11 +21,18 @@ let gamedata = {
                         "@旅店老板",
                         "$playerRecognize(\"firstTown_hotel_travellers_room\");"
                     ]
+                },
+                {
+                    "id" : "clock",
+                    "deviation" : -0.5,
+                    "placed" : true,
+                    "material" : "wood"
                 }
             ],
             "near" : {
                 "down" : "firstTown_hotel_corridor"
-            }
+            },
+            "nowindow" : true
         },
         "firstTown_hotel_corridor" : {
             "id" : "firstTown_hotel_corridor",
@@ -67,6 +74,11 @@ let gamedata = {
         },
         "health" : 100,
         "hunger" : 10
+    },
+
+    "global" : {
+        "time" : 8,
+        "date" : 1
     },
 
     "tasks" : {
@@ -132,7 +144,8 @@ let gamedata = {
         "sword" : "剑",
         "note" : "字条",
         "bread" : "面包",
-        "shelf" : "架"
+        "shelf" : "架",
+        "clock" : "钟"
     },
 
     "helpText" : {
