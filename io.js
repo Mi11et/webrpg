@@ -2,8 +2,7 @@ window.onload = function() {
     // 初始化
     document.getElementById("input").value = "";
     document.getElementById("output").value = "";
-    // gameInit();
-    startTutorial();
+    gameInit();
     return;
 }
 

@@ -276,9 +276,32 @@ function playerRecognize() {
 
 function gameInit() {
     // 暂时没有用
-    pt("这是一个命令行冒险游戏。");
-    pt("输入 start new 开始一场新的冒险。");
+    // pt("这是一个命令行冒险游戏。");
+    // pt("输入 start new 开始一场新的冒险。");
+
+    // 载入默认数据
+    loadData("default");
+    startTutorial();
     return;
+}
+
+function mergeData(src, dest) {
+    // 用递归方法合并两个对象
+    let dataToCopy = Object.keys(dest);
+    for (let i of dataToCopy) {
+        if (src.hasOwnProperty(i)) {
+            mergeData(src[i], dest[i]);
+        } else {
+            src[i] = dest[i];
+        }
+    }
+}
+
+function loadData(dataname) {
+    // 载入指定数据
+    if (dataname === "default") {
+        mergeData(gamedata, gamedataDefault);
+    }
 }
 
 function characterSpeak(speaker, speech) {
@@ -447,7 +470,7 @@ function getTime(character) {
 }
 
 function readContent(itemToRead) {
-    let textList = itemToRead.content;
+    let textList = gamedata.content[itemToRead.content];
     let formattedContent = describeItem(itemToRead, 0) + "中如此写着：";
     for (let i of textList) {
         if (i[0] == '#') {
