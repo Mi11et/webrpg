@@ -285,14 +285,14 @@ function gameInit() {
     return;
 }
 
-function mergeData(src, dest) {
+function mergeData(dest, src) {
     // 用递归方法合并两个对象
-    let dataToCopy = Object.keys(dest);
+    let dataToCopy = Object.keys(src);
     for (let i of dataToCopy) {
         if (src.hasOwnProperty(i)) {
-            mergeData(src[i], dest[i]);
+            mergeData(dest[i], src[i]);
         } else {
-            src[i] = dest[i];
+            dest[i] = src[i];
         }
     }
 }
