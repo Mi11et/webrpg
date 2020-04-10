@@ -1,10 +1,13 @@
 function checkTasks(playerAction) {
     // 检查角色的一个动作是否满足一个任务的达成条件
     let taskFinishFlag = false;
+    let checkRequirement = (task) => {
+        if (task.requirement[0] === '$') return eval(task.requirement.substring(1));
+        else return playerAction === task.requirement;
+    }
     for (let taskIndex in gamedata.player.tasks) {
-        if (playerAction === gamedata.player.tasks[taskIndex].requirement
-                && (gamedata.player.location === gamedata.player.tasks[taskIndex].location
-                    || gamedata.player.tasks[taskIndex].location === "any")) {
+        if (checkRequirement(gamedata.player.tasks[taskIndex])
+                && [gamedata.player.location, "any"].includes(gamedata.player.tasks[taskIndex].location)) {
             pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
             if (gamedata.player.tasks[taskIndex].hasOwnProperty("dialogueWhenFinish")) {
                 characterSpeak("me", gamedata.player.tasks[taskIndex].dialogueWhenFinish);

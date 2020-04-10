@@ -80,6 +80,11 @@ function getCommand(inputString) {
         command.splice(emptyElement.pop(), 1);
     }
     if (command.length === 0) return;
+    inputString = "";
+    for (let i of command) {
+        inputString += ' ' + i;
+    }
+    inputString = inputString.substring(1);
     let result;
     if (commandsList[command[0]] === undefined) {
         pterr("你要做什么？");
@@ -92,7 +97,7 @@ function getCommand(inputString) {
         result = commandName(command);
     }
     document.getElementById("output").value += '\n';
-    if ((result || result === undefined) && checkTasks(inputString)) {
+    if ([true, undefined].includes(result) && checkTasks(inputString)) {
         document.getElementById("output").value += '\n';
     }
     // 自动滚动

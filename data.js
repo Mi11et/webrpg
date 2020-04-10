@@ -91,9 +91,10 @@ let gamedata = {
         },
         "tutorial-get" : {
             "name" : "填饱肚子",
-            "detail" : "到房间外的架子上拿吃的。",
-            "location" : "firstTown_hotel_corridor"
-            //"requirement" : "get sword from chest",
+            "detail" : "使用 move 移动到走廊，用 look 查看架子上是否有食物，用 get 来获取食物，用 eat 来吃掉食物。如果命令不起作用，记得看看帮助。",
+            "dialogueWhenAccept" : "原来外面有免费的食物吗……正好我也有一点饿了……\n（将饥饿值恢复到 50 点以上吧）",
+            "location" : "firstTown_hotel_corridor",
+            "requirement" : "$gamedata.player.hunger >= 50",
         },
         
     },
