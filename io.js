@@ -120,8 +120,8 @@ function playerEndMoving() {
 function onReturn() {
     // 移动模式
     let moveNear = function(dest) {
-        if (gamedata.player.location.near.hasOwnProperty(dest)) {
-            playerMove(gamedata.player.location.near[dest]);
+        if (gamedata.map[gamedata.player.location].near.hasOwnProperty(dest)) {
+            playerMove(gamedata.map[gamedata.player.location].near[dest]);
         }
         // 自动滚动
         document.getElementById("output").scrollTop = 

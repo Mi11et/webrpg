@@ -51,7 +51,7 @@ let commandsList = {
             }
             target = target.substring(1);
             let range = {};
-            Object.assign(range, gamedata.player.items, gamedata.player.location.items);
+            Object.assign(range, gamedata.player.items, gamedata.map[gamedata.player.location].items);
             for (let i in range) {
                 if (range[i].id === target) {
                     pt(describeItem(range[i], 1));
@@ -116,7 +116,7 @@ let commandsList = {
         }
         target = target.substring(1);
         let range = {};
-        Object.assign(range, gamedata.player.items, gamedata.player.location.items);
+        Object.assign(range, gamedata.player.items, gamedata.map[gamedata.player.location].items);
         for (let i in range) {
             if (range[i].id === target) {
                 if (!range[i].hasOwnProperty("content")) {
@@ -170,7 +170,7 @@ let commandsList = {
         target = target.substring(1);
         source = source.substring(1);
         if (sourceFlag) {
-            let sourceRange = gamedata.player.location.items;
+            let sourceRange = gamedata.map[gamedata.player.location].items;
             for (let i of sourceRange) {
                 if (i.id === source) {
                     if (!i.hasOwnProperty("items")
@@ -192,7 +192,7 @@ let commandsList = {
             pt("这里没有", source, "。");
             return false;
         } else {
-            let range = gamedata.player.location.items;
+            let range = gamedata.map[gamedata.player.location].items;
             for (let i in range) {
                 if (range[i].id === target) {
                     gamedata.player.items.push(range[i]);

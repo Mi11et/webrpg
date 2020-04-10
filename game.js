@@ -1,8 +1,9 @@
 function checkTasks(playerAction) {
+    // 检查角色的一个动作是否满足一个任务的达成条件
     let taskFinishFlag = false;
     for (let taskIndex in gamedata.player.tasks) {
         if (playerAction === gamedata.player.tasks[taskIndex].requirement
-                && (gamedata.player.location === gamedata.map[gamedata.player.tasks[taskIndex].location]
+                && (gamedata.player.location === gamedata.player.tasks[taskIndex].location
                     || gamedata.player.tasks[taskIndex].location === "any")) {
             pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
             if (gamedata.player.tasks[taskIndex].hasOwnProperty("dialogueWhenFinish")) {
@@ -28,7 +29,8 @@ function playerRecognize() {
     // 当玩家（由于剧情或者别的原因）被带到某一个地方，
     // 需要寻找线索来认识这个地方的时候才要用到这个方法
     for (let i = 0; i < arguments.length; ++i) {
-        if (gamedata.map.hasOwnProperty(arguments[i])) {
+        if (gamedata.map.hasOwnProperty(arguments[i])
+            && !gamedata.player.knownLocation.includes(arguments[i])) {
             gamedata.player.knownLocation.push(arguments[i]);
         }
     }
@@ -40,29 +42,79 @@ function gameInit() {
     // pt("这是一个命令行冒险游戏。");
     // pt("输入 start new 开始一场新的冒险。");
 
-    // 载入默认数据
-    loadData("default");
+    // 直接进入教程
     startTutorial();
     return;
 }
 
-function mergeData(dest, src) {
-    // 用递归方法合并两个对象
-    let dataToCopy = Object.keys(src);
-    for (let i of dataToCopy) {
-        if (dest.hasOwnProperty(i)) {
-            mergeData(dest[i], src[i]);
-        } else {
-            dest[i] = src[i];
-        }
-    }
-}
-
 function loadData(dataname) {
     // 载入指定数据
-    if (dataname === "default") {
-        mergeData(gamedata, gamedataDefault);
+    let mergeData = (dest, src) => {
+        if (typeof src === "object") {
+            for (let i in src) {
+                if (typeof src[i] != "object") {
+                    dest[i] = src[i];
+                    continue;
+                }
+                if (!dest.hasOwnProperty(i)) {
+                    dest[i] = {};
+                }
+                mergeData(dest[i], src[i]);
+            }
+        } else {
+            dest = src;
+        }
     }
+    let dataStr = localStorage.getItem(dataname);
+    if (dataStr === null) return false;
+    let saveData = JSON.parse(dataStr);
+    mergeData(gamedata, saveData);
+    return true;
+}
+
+function saveData(dataname) {
+    // 存储变动的数据
+    let search = (savePos, dataPos, rule) => {
+        let dotPos = rule.indexOf('.');
+        let target = rule.substring(0, dotPos);
+        let nextRule = rule.substring(dotPos + 1);
+        if (target === "all") {
+            if (nextRule === "") {
+                savePos = dataPos;
+                return;
+            }
+            for (let i in dataPos) {
+                if (!savePos.hasOwnProperty(i)) {
+                    savePos[i] = {};
+                }
+                search(savePos[i], dataPos[i], nextRule);
+            }
+        } else {
+            if (nextRule === "") {
+                savePos[target] = dataPos[target];
+                return;
+            }
+            if (!savePos.hasOwnProperty(target)) {
+                savePos[target] = {};
+            }
+            search(savePos[target], dataPos[target], nextRule);
+        }
+        return;
+    }
+    let ruleList = [
+        "map.all.items",
+        "player",
+        "global"
+    ];
+    let saveData = {};
+    for (let rule of ruleList) {
+        rule += '.';
+        search(saveData, gamedata, rule);
+    }
+    let dataStr = JSON.stringify(saveData);
+    localStorage.setItem(dataname, dataStr);
+    console.log(saveData);
+    return;
 }
 
 function characterSpeak(speaker, speech) {
@@ -89,7 +141,7 @@ function playerMove(dest, recognize = true) {
     if (recognize) {
         playerRecognize(dest);
     }
-    gamedata.player.location = gamedata.map[dest];
+    gamedata.player.location = dest;
     describeLocation();
     pt();
     return;
@@ -116,19 +168,19 @@ function startTutorial() {
 function describeLocation() {
     // 描述玩家所在的地点
     let locationName = "";
-    if (gamedata.player.knownLocation.includes(gamedata.player.location.id)) {
-        locationName = gamedata.player.location.name;
+    if (gamedata.player.knownLocation.includes(gamedata.map[gamedata.player.location].id)) {
+        locationName = gamedata.map[gamedata.player.location].name;
     } else {
         locationName = "陌生的地方";
     }
     pt("这里是" + locationName + "。");
-    pt(gamedata.player.location.detail);
+    pt(gamedata.map[gamedata.player.location].detail);
     // 描述场景内的物品
-    if (gamedata.player.location.hasOwnProperty("items")
-        && gamedata.player.location.items.length !== 0) {
+    if (gamedata.map[gamedata.player.location].hasOwnProperty("items")
+        && gamedata.map[gamedata.player.location].items.length !== 0) {
         pt("这里有：");
-        for (let i in gamedata.player.location.items) {
-            pt(indent(describeItem(gamedata.player.location.items[i], 0), "4###"));
+        for (let i in gamedata.map[gamedata.player.location].items) {
+            pt(indent(describeItem(gamedata.map[gamedata.player.location].items[i], 0), "4###"));
         }
     }
     // 描述当前的时间
@@ -216,7 +268,7 @@ function getTime(character) {
             }
         }
     }
-    let location = character.location;
+    let location = gamedata.map[character.location];
     if (haveProperty(location, "items")) {
         for (let i of location.items) {
             if (i.id === "clock" && i.placed) {
