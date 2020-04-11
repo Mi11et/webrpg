@@ -261,7 +261,7 @@ let commandsList = {
         // 存档
         if (gamedata.global.currentSaveName === "") {
             if (arguments[0].length != 1) {
-                pterr("你要保存到哪一个存档？");
+                pterr("存档名称只能为一个英文单词。");
                 return false;
             }
             gamedata.global.currentSaveName = arguments[0][0];
