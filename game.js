@@ -42,81 +42,21 @@ function playerRecognize() {
 
 function gameInit() {
     // 暂时没有用
-    // pt("这是一个命令行冒险游戏。");
-    // pt("输入 start new 开始一场新的冒险。");
-
-    // 直接进入教程
-    startTutorial();
+    gameMainMenu();
     return;
 }
 
-function loadData(dataname) {
-    // 载入指定数据
-    let mergeData = (dest, src) => {
-        if (typeof src === "object") {
-            for (let i in src) {
-                if (typeof src[i] != "object") {
-                    dest[i] = src[i];
-                    continue;
-                }
-                if (!dest.hasOwnProperty(i)) {
-                    dest[i] = {};
-                }
-                mergeData(dest[i], src[i]);
-            }
-        } else {
-            dest = src;
-        }
-    }
-    let dataStr = localStorage.getItem(dataname);
-    if (dataStr === null) return false;
-    let saveData = JSON.parse(dataStr);
-    mergeData(gamedata, saveData);
-    return true;
-}
-
-function saveData(dataname) {
-    // 存储变动的数据
-    let search = (savePos, dataPos, rule) => {
-        let dotPos = rule.indexOf('.');
-        let target = rule.substring(0, dotPos);
-        let nextRule = rule.substring(dotPos + 1);
-        if (target === "all") {
-            if (nextRule === "") {
-                savePos = dataPos;
-                return;
-            }
-            for (let i in dataPos) {
-                if (!savePos.hasOwnProperty(i)) {
-                    savePos[i] = {};
-                }
-                search(savePos[i], dataPos[i], nextRule);
-            }
-        } else {
-            if (nextRule === "") {
-                savePos[target] = dataPos[target];
-                return;
-            }
-            if (!savePos.hasOwnProperty(target)) {
-                savePos[target] = {};
-            }
-            search(savePos[target], dataPos[target], nextRule);
-        }
-        return;
-    }
-    let ruleList = [
-        "map.all.items",
-        "player",
-        "global"
-    ];
-    let saveData = {};
-    for (let rule of ruleList) {
-        rule += '.';
-        search(saveData, gamedata, rule);
-    }
-    let dataStr = JSON.stringify(saveData);
-    localStorage.setItem(dataname, dataStr);
-    console.log(saveData);
+function gameMainMenu() {
+    // 显示主界面
+    pt(gameTitleBig);
+    pt("这是一个命令行冒险游戏，名字还没想好。应该会尽量中二一点。");
+    pt("输入 start new 开始新的冒险。");
+    pt("输入 start <存档名> 来继续过去的冒险。");
+    pt("输入 delete <存档名> 来忘却过去的冒险。");
+    pt("注意：清楚浏览器缓存数据可能导致存档丢失。");
+    pt();
+    availableCommands.available = ["start", "delete"];
+    availableCommands.default = false;
     return;
 }
 

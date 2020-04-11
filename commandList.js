@@ -6,7 +6,7 @@ let commandsList = {
         }
         let commandToQuery = "";
         if (arguments[0].length === 0) {
-            pt("所有可用的命令如下，使用 help + 命令 来查看详细的使用方法。")
+            pt("列出所有命令如下，使用 help + 命令 来查看详细的使用方法。")
             let outputBuf = [];
             let printBuf = () => {
                 let buf = "";
@@ -234,6 +234,86 @@ let commandsList = {
         }
         pt("这里没有", target, "。");
         return false;
+    },
+    "start" : function() {
+        let toggleCommandLimit = () => {
+            availableCommands.unavailable = ["start", "delete"];
+            availableCommands.default = true;
+        }
+        if (arguments[0].length === 1 && arguments[0][0] === "new") {
+            clearTextArea();
+            toggleCommandLimit();
+            startTutorial();
+            return true;
+        }
+        if (arguments[0].length != 1 
+            || !localStorage.hasOwnProperty(arguments[0][0])) {
+            pterr("你要载入哪一个存档？");
+            return false;
+        }
+        loadData(arguments[0][0]);
+        clearTextArea();
+        toggleCommandLimit();
+        describeLocation();
+        return true;
+    },
+    "save" : function() {
+        // 存档
+        if (gamedata.global.currentSaveName === "") {
+            if (arguments[0].length != 1) {
+                pterr("你要保存到哪一个存档？");
+                return false;
+            }
+            gamedata.global.currentSaveName = arguments[0][0];
+            saveData(arguments[0][0]);
+            pt("存档", gamedata.global.currentSaveName, "已保存。");
+            return true;
+        } else {
+            if (arguments[0].length === 0) {
+                saveData(gamedata.global.currentSaveName);
+                pt("存档", gamedata.global.currentSaveName, "已保存。");
+                return true;
+            } else if (arguments[0].length === 1) {
+                gamedata.global.currentSaveName = arguments[0][0];
+                saveData(arguments[0][0]);
+                pt("存档", gamedata.global.currentSaveName, "已保存。");
+                return true;
+            } else {
+                pterr("你要保存到哪一个存档？");
+                return false;
+            }
+        }
+    },
+    "delete" : function() {
+        if (arguments[0].length != 1 
+            || !localStorage.hasOwnProperty(arguments[0][0])) {
+            pterr("你要删除哪一个存档？");
+            return false;
+        }
+        localStorage.removeItem(arguments[0][0]);
+        pt("存档", arguments[0][0] , "已删除。");
+        return true;
     }
 }
 
+let availableCommands = {
+    "default" : false,
+    "available" : [],
+    "unavailable" : [],
+    "alwaysAvailable" : [
+        "help"
+    ]
+}
+
+function checkCommandAvailable(command) {
+    if (availableCommands.alwaysAvailable.includes(command)) {
+        return true;
+    }
+    if (availableCommands.available.includes(command)) {
+        return true;
+    }
+    if (availableCommands.unavailable.includes(command)) {
+        return false;
+    }
+    return availableCommands.default;
+}

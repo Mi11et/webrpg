@@ -1,8 +1,13 @@
 window.onload = function() {
     // 初始化
+    clearTextArea();
+    gameInit();
+    return;
+}
+
+function clearTextArea() {
     document.getElementById("input").value = "";
     document.getElementById("output").value = "";
-    gameInit();
     return;
 }
 
@@ -88,6 +93,9 @@ function getCommand(inputString) {
     let result;
     if (commandsList[command[0]] === undefined) {
         pterr("你要做什么？");
+        result = false;
+    } else if (!checkCommandAvailable(command[0])) {
+        pterr("该命令暂时不可用。");
         result = false;
     } else {
         let commandName = commandsList[command.shift()];
