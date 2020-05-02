@@ -75,7 +75,9 @@ function pterr() {
 }
 
 function getCommand(inputString) {
-    // 调用命令
+    // 接收到命令之后的处理
+
+    // 分割命令
     let command = inputString.split(' ');
     let emptyElement = [];
     for (let i in command) {
@@ -90,6 +92,8 @@ function getCommand(inputString) {
         inputString += ' ' + i;
     }
     inputString = inputString.substring(1);
+
+    // 识别命令
     let result;
     if (commandsList[command[0]] === undefined) {
         pterr("你要做什么？");
@@ -98,15 +102,18 @@ function getCommand(inputString) {
         pterr("该命令暂时不可用。");
         result = false;
     } else {
+        // 执行对应命令
         let commandName = commandsList[command.shift()];
-        if (typeof commandName === "string") {
+        while (typeof commandName === "string") {
+            // 对命令别名/缩写进行跳转
             commandName = commandsList[commandName];
         }
         result = commandName(command);
     }
     document.getElementById("output").value += '\n';
-    if ([true, undefined].includes(result) && checkTasks(inputString)) {
-        document.getElementById("output").value += '\n';
+    if ([true, undefined].includes(result)) {
+        // 判断是否完成某个任务
+        checkTasks(inputString);
     }
     // 自动滚动
     document.getElementById("output").scrollTop = 

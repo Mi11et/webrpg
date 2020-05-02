@@ -23,6 +23,7 @@ function checkTasks(playerAction) {
             taskFinishFlag = true;
         }
     }
+    pt();
     return taskFinishFlag;
 }
 
