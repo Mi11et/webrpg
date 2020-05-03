@@ -40,6 +40,7 @@ let commandsList = {
         }
     },
     "look" : function() {
+        waitForRounds("look");
         if (arguments[0].length === 0) {
             pt("你看了看周围。");
             describeLocation();
@@ -122,6 +123,7 @@ let commandsList = {
                 if (!range[i].hasOwnProperty("content")) {
                     pterr(target, "没什么好读的。")
                 }
+                waitForRounds("read");
                 pt(readContent(range[i]));
                 return true;
             }
@@ -143,6 +145,7 @@ let commandsList = {
             return false;
         }
         target = target.substring(1);
+        waitForRounds("say");
         characterSpeak("me", target);
         return true;
     },
@@ -179,6 +182,7 @@ let commandsList = {
                     }
                     for (let j in i.items) {
                         if (i.items[j].id === target) {
+                            waitForRounds("get");
                             gamedata.player.items.push(i.items[j]);
                             pt("你拿起了" + describeItem(i.items[j], 0));
                             i.items.splice(j, 1);
@@ -195,6 +199,7 @@ let commandsList = {
             let range = gamedata.map[gamedata.player.location].items;
             for (let i in range) {
                 if (range[i].id === target) {
+                    waitForRounds("get");
                     gamedata.player.items.push(range[i]);
                     pt("你拿起了" + describeItem(range[i], 0));
                     range.splice(i, 1);
@@ -226,6 +231,7 @@ let commandsList = {
                     pt(describeItem(i, 0) + "不是食物。");
                     return false;
                 }
+                waitForRounds("eat");
                 gamedata.player.hunger += i.nutrition;
                 pt("你吃掉了" + describeItem(i, 0));
                 range.splice(i, 1);

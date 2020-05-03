@@ -245,3 +245,20 @@ function readContent(itemToRead) {
     }
     return formattedContent;
 }
+
+function nextRound() {
+    // 进入下一回合
+    return;
+}
+
+function waitForRounds(command) {
+    // 玩家进行某项行为需要若干回合，若玩家当前行为被打断则返回 false
+    let rounds = gamedata.needTime[command];
+    for (let i = 0; i < rounds; ++i) {
+        nextRound();
+        if (rounds > 1 && tempdata.player.interrupted === true) {
+            return false;
+        }
+    }
+    return true;
+}

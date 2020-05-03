@@ -142,6 +142,9 @@ function onReturn() {
     let moveNear = function(dest) {
         if (gamedata.map[gamedata.player.location].near.hasOwnProperty(dest)) {
             playerMove(gamedata.map[gamedata.player.location].near[dest]);
+            nextRound();
+        } else {
+            pterr("那边无路可走。");
         }
         // 自动滚动
         document.getElementById("output").scrollTop = 

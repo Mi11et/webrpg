@@ -199,6 +199,27 @@ let gamedata = {
             "@旅店老板",
             "$playerRecognize(\"firstTown_hotel_travellers_room\");"
         ]
+    },
+
+    "needTime" : {
+        "help" : 0,
+        "task" : 0,
+        "look" : 1,
+        "inv" : 0,
+        "eat" : 1,
+        "read" : 1,
+        "save" : 0,
+        "load" : 0,
+        "get" : 1,
+        "move" : 0, // 移动所需回合数应特殊判断
+        "say" : 1,
+        "whoami" : 0,
+    }
+}
+
+let tempdata = {
+    "player" : {
+        "interrupted" : false
     }
 }
 
