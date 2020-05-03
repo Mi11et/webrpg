@@ -69,25 +69,28 @@ let gamedata = {
         "tutorial-read" : {
             "name" : "墙上的字条",
             "detail" : "使用 read 命令来阅读文字。",
-            "dialogueWhenAccept" : "总而言之，赶紧看看字条里写了什么吧",
+            "dialogueWhenAccept" : "墙上好像有张字条，用 read 命令读读看吧。",
             "location" : "firstTown_hotel_travellers_room",
             "requirement" : "read note",
             "next" : "tutorial-get",
+            "additional" : [
+                "tutorial-help"
+            ]
         },
         "tutorial-look" : {
             "name" : "观察周围",
             "detail" : "使用 look 命令来到处看看。",
             "location" : "firstTown_hotel_travellers_room",
             "requirement" : "look",
-            "next" : "tutorial-help"
+            "next" : "tutorial-read"
         },
         "tutorial-help" : {
             "name" : "查看帮助",
             "detail" : "使用 help read 来查看 read 命令的使用方法。",
-            "dialogueWhenAccept" : "墙上好像有张字条，用 read 命令读读看吧。\n……\nread 命令怎么用来着？",
+            "dialogueWhenAccept" : "……\nread 命令怎么用来着？",
+            "dialogueWhenFinish" : "总而言之，赶紧看看字条里写了什么吧",
             "location" : "any",
             "requirement" : "help read",
-            "next" : "tutorial-read"
         },
         "tutorial-get" : {
             "name" : "填饱肚子",

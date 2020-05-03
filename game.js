@@ -1,30 +1,49 @@
 function checkTasks(playerAction) {
     // 检查角色的一个动作是否满足一个任务的达成条件
-    let taskFinishFlag = false;
     let checkRequirement = (task) => {
+        // 判断是否满足任务的达成条件
         if (task.requirement[0] === '$') return eval(task.requirement.substring(1));
         else return playerAction === task.requirement;
     }
-    for (let taskIndex in gamedata.player.tasks) {
-        if (checkRequirement(gamedata.player.tasks[taskIndex])
-                && [gamedata.player.location, "any"].includes(gamedata.player.tasks[taskIndex].location)) {
-            pt("你完成了任务【" + gamedata.player.tasks[taskIndex].name + "】。");
-            if (gamedata.player.tasks[taskIndex].hasOwnProperty("dialogueWhenFinish")) {
-                characterSpeak("me", gamedata.player.tasks[taskIndex].dialogueWhenFinish);
+    let playerTasks = gamedata.player.tasks;
+    let deletedTasks = [];
+    for (let currentTask of playerTasks) {
+        if (checkRequirement(currentTask)
+                && [gamedata.player.location, "any"].includes(currentTask.location)) {
+            // 如果玩家（在指定地点）完成了任务
+            pt("你完成了任务【" + currentTask.name + "】。");
+            if (currentTask.hasOwnProperty("additional")) {
+                // 完成任务之后跳过附加任务
+                for (let i of currentTask.additional) {
+                    for (let j of playerTasks) {
+                        if (j.name === gamedata.tasks[i].name) {
+                            pt("已跳过附加任务【" + j.name + "】。")
+                            deletedTasks.push(j.name);
+                        }
+                    }
+                    
+                }
             }
-            if (gamedata.player.tasks[taskIndex].hasOwnProperty("next")) {
-                playerAddTask(gamedata.player.tasks[taskIndex].next);
-                pt("新的任务【" + gamedata.tasks[gamedata.player.tasks[taskIndex].next].name + "】已追加。");
+            if (currentTask.hasOwnProperty("dialogueWhenFinish")) {
+                // 完成任务之后的对话
+                characterSpeak("me", currentTask.dialogueWhenFinish);
             }
-            if (gamedata.player.tasks[taskIndex].hasOwnProperty("afterFinish")) {
-                eval(gamedata.player.tasks[taskIndex].afterFinish);
+            if (currentTask.hasOwnProperty("next")) {
+                // 完成任务之后获得新任务
+                playerAddTask(currentTask.next);
             }
-            gamedata.player.tasks.splice(taskIndex, 1);
-            taskFinishFlag = true;
+            if (currentTask.hasOwnProperty("afterFinish")) {
+                // 完成任务之后执行的命令
+                eval(currentTask.afterFinish);
+            }
+            deletedTasks.push(currentTask.name);
         }
     }
+    for (let i in deletedTasks) {
+        playerTasks.splice(i, 1);
+    }
     pt();
-    return taskFinishFlag;
+    return;
 }
 
 function playerRecognize() {
@@ -91,14 +110,26 @@ function playerMove(dest, recognize = true) {
     return;
 }
 
-function playerAddTask(taskName) {
+function playerAddTask(taskName, from = null) {
     // 给玩家增加一项任务
     if (gamedata.tasks.hasOwnProperty(taskName) === false) {
         return;
     }
     gamedata.player.tasks.push(gamedata.tasks[taskName]);
     if (gamedata.tasks[taskName].hasOwnProperty("dialogueWhenAccept")) {
+        // 接受任务时的对话
         characterSpeak("me", gamedata.tasks[taskName].dialogueWhenAccept);
+    }
+    if (from === null) {
+        pt("新的任务【" + gamedata.tasks[taskName].name + "】已追加。");
+    } else {
+        pt("【" + gamedata.tasks[from].name + "】的附加任务【" + gamedata.tasks[taskName].name + "】已追加。");
+    }
+    if (gamedata.tasks[taskName].hasOwnProperty("additional")) {
+        // 接受附加任务
+        for (let i of gamedata.tasks[taskName].additional) {
+            playerAddTask(i, taskName);
+        }
     }
     return;
 }
