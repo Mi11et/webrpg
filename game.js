@@ -162,8 +162,8 @@ function describeLocation() {
     let currentTime = getTime(gamedata.player);
     if (currentTime[0] != null) {
         let formatTime = (time) => {
-            time = ((time % 24) + 24) % 24;
-            let hour = Math.floor(time), minute = Math.floor((time - hour) * 60);
+            while (time < 0) time += 24 * 60
+            let hour = Math.floor(time / 60), minute = time % 60;
             let result = hour.toString() + "点";
             return minute ? result + minute.toString() + "分" : result;
         }
@@ -178,6 +178,10 @@ function describeLocation() {
             }
             case "sky" : {
                 pt("你看了看天色，现在大概是" + formatTime(currentTime[0]) + "。");
+                break;
+            }
+            case null : {
+                pt("你不知道现在是几点。");
                 break;
             }
         }
@@ -236,10 +240,11 @@ function getTime(character) {
     let haveProperty = (target, prop) => {
         return target.hasOwnProperty(prop) && target[prop].length;
     }
+    let time = gamedata.global.time;
     if (haveProperty(character, "equipment")) {
         for (let i of character.equipment) {
             if (i.id === "watch") {
-                return [gamedata.global.time + i.deviation, "watch"];
+                return [time + i.deviation, "watch"];
             }
         }
     }
@@ -247,14 +252,14 @@ function getTime(character) {
     if (haveProperty(location, "items")) {
         for (let i of location.items) {
             if (i.id === "clock" && i.placed) {
-                return [gamedata.global.time + i.deviation, "clock"];
+                return [time + i.deviation, "clock"];
             }
         }
     }
     if (location.hasOwnProperty("nowindow") && location.nowindow) {
         return [null, null];
     }
-    return [Math.round(gamedata.global.time), "sky"];
+    return [Math.round(time / 60) * 60, "sky"];
 }
 
 function readContent(itemToRead) {
@@ -279,6 +284,17 @@ function readContent(itemToRead) {
 
 function nextRound() {
     // 进入下一回合
+    let timePass = () => {
+        let time = gamedata.global.time;
+        time += 10;
+        if (time > 24 * 60) {
+            time -= 24 * 60;
+            gamedata.global.date += 1;
+        }
+        gamedata.global.time = time;
+        return;
+    }
+    timePass();
     return;
 }
 

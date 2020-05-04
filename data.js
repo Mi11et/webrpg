@@ -17,7 +17,7 @@ let gamedata = {
                 },
                 {
                     "id" : "clock",
-                    "deviation" : -0.5,
+                    "deviation" : -30,
                     "placed" : true,
                     "material" : "wood"
                 }
@@ -188,7 +188,7 @@ let gamedata = {
     },
 
     "global" : {
-        "time" : 8,
+        "time" : 480,
         "date" : 1,
         "currentSaveName" : ""
     },
