@@ -309,6 +309,51 @@ let commandsList = {
         localStorage.removeItem(arguments[0][0]);
         pt("存档", arguments[0][0] , "已删除。");
         return true;
+    },
+    "talkwith" : function() {
+        let target = "", dialog = "";
+        let seekNPC = (NPCName) => {
+            for (let i in gamedata.npc) {
+                if (gamedata.npc[i].id === NPCName) {
+                    return gamedata.npc[i];
+                }
+            }
+            return false;
+        }
+        let analyze = (argList) => {
+            if (argList.includes("about") === true) {
+                // 指定对话内容
+                dialog = argList.slice(argList.findIndex(i => i === "about") + 1).toString();
+                target = argList.slice(0, argList.findIndex(i => i === "about")).toString();
+            } else {
+                // 默认对话
+                dialog = "default";
+                target = argList.toString()
+            }
+            target = seekNPC(target);
+        }
+        let getDialog = (dialogs, dialog) => {
+            for (let cnt = 0; typeof dialogs[dialog] === "string"; cnt++) {
+                dialog = dialogs[dialog];
+                if (cnt >= 100) {
+                    throw new Error("对话跳转陷入了死循环。");
+                }
+            }
+            let speech = dialogs[dialog][Math.floor(dialogs[dialog].length * Math.random())];
+            return speech;
+        }
+        analyze(arguments[0]);
+        if (target === false) {
+            pterr("你要和谁说话？");
+            return false;
+        }
+        if (target.interactions.talk.hasOwnProperty(dialog)) {
+            characterSpeak(target, getDialog(target.interactions.talk, dialog));
+            return true;
+        } else {
+            pt(target.name + "不知道你在说什么。");
+            return false;
+        }
     }
 }
 

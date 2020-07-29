@@ -51,7 +51,22 @@ let gamedata = {
                 }
             ],
             "near" : {
-                "up" : "firstTown_hotel_travellers_room"
+                "up" : "firstTown_hotel_travellers_room",
+                "down" : "firetTown_hotel_lobby"
+            }
+        },
+        "firetTown_hotel_lobby" : {
+            "id" : "firetTown_hotel_lobby",
+            "name" : "旅店的前厅",
+            "detail" : "前厅里没有什么人，只有老板百无聊赖地坐在柜台后面，似乎在打盹。",
+            "items" : [
+                {
+                    "id" : "list",
+                    "content" : "firetTown_hotel_lobby_list"
+                }
+            ],
+            "near" : {
+                "up" : "firstTown_hotel_corridor"
             }
         }
     },
@@ -124,7 +139,8 @@ let gamedata = {
         "note" : "字条",
         "bread" : "面包",
         "shelf" : "架",
-        "clock" : "钟"
+        "clock" : "钟",
+        "list" : "表格"
     },
 
     "helpText" : {
@@ -171,6 +187,10 @@ let gamedata = {
         "save" : {
             "save" : "保存到当前存档，初次保存将决定存档名称。",
             "save <存档名>" : "保存到指定存档。如果不存在将会新建。"
+        },
+        "talkwith" : {
+            "talkwith <对象>" : "和某人聊聊天。",
+            "talkwith <对象> about <内容>" : "和某人聊聊某件事。"
         }
     },
 
@@ -187,6 +207,31 @@ let gamedata = {
         "hunger" : 10
     },
 
+    "npc" : {
+        "10001" : {
+            "id" : "boss",
+            "name" : "旅店老板",
+            "location" : "firetTown_hotel_lobby",
+            "items" : [],
+            "health" : 100,
+            "interactions" : {
+                "talk" : {
+                    "hotel" : "here",
+                    "here" : [
+                        "这间旅店是我祖上传下来的，有几十年历史了。",
+                        "这个小镇位于两国边境，平时来往的旅人很多，所以旅店的生意很好。",
+                        "虽然附近的两国在边境时有冲突，但这个边境小镇一直很安宁。"
+                    ],
+                    "default" : "here",
+                    "meal" : [
+                        "这边的饭菜怎么样？今天可是我掌勺！",
+                        "我年轻的时候在王都的一间面包店做过厨师，在这镇上没有人比我更懂面包了！"
+                    ]
+                }
+            }
+        }
+    },
+
     "global" : {
         "time" : 480,
         "date" : 1,
@@ -201,6 +246,9 @@ let gamedata = {
             "只要遵守规矩别捣乱，你就可以一直住在这里。",
             "@旅店老板",
             "$playerRecognize(\"firstTown_hotel_travellers_room\");"
+        ],
+        "firetTown_hotel_lobby_list" : [
+            "本店提供住宿及餐饮。客房在二楼，餐厅在一楼。"
         ]
     },
 
