@@ -182,11 +182,16 @@ let commandsList = {
                     }
                     for (let j in i.items) {
                         if (i.items[j].id === target) {
-                            waitForRounds("get");
-                            gamedata.player.items.push(i.items[j]);
-                            pt("你拿起了" + describeItem(i.items[j], 0));
-                            i.items.splice(j, 1);
-                            return true;
+                            if (i.items[j].hasOwnProperty("carriable") && i.items[j].carriable === true) {
+                                waitForRounds("get");
+                                gamedata.player.items.push(i.items[j]);
+                                pt("你拿起了" + describeItem(i.items[j], 0) + "。");
+                                i.items.splice(j, 1);
+                                return true;
+                            } else {
+                                pt("你拿不起" + describeItem(i.items[j], 0) + "。");
+                                return false;
+                            }
                         }
                     }
                     pt(source, "里没有", target, "。");
@@ -199,11 +204,16 @@ let commandsList = {
             let range = gamedata.map[gamedata.player.location].items;
             for (let i in range) {
                 if (range[i].id === target) {
-                    waitForRounds("get");
-                    gamedata.player.items.push(range[i]);
-                    pt("你拿起了" + describeItem(range[i], 0));
-                    range.splice(i, 1);
-                    return true;
+                    if (range[i].hasOwnProperty("carriable") && range[i].carriable === true) {
+                        waitForRounds("get");
+                        gamedata.player.items.push(range[i]);
+                        pt("你拿起了" + describeItem(range[i], 0) + "。");
+                        range.splice(i, 1);
+                        return true;
+                    } else {
+                        pt("你拿不起" + describeItem(range[i], 0) + "。");
+                        return false;
+                    }
                 }
             }
             pt("这里没有", target, "。");
