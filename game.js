@@ -83,11 +83,14 @@ function gameMainMenu() {
 function characterSpeak(speaker, speech) {
     // 某个人说了某句话
     // speaker 参数不一定是一个角色，也可以是字符串 "me" ，表示玩家自己说了什么
+    // speech 可以是单个字符串或字符串数组
     let speeches = [];
     if (typeof speech === "string") {
         speeches = speech.split('\n');
     } else {
-        speeches = speech;
+        for (let i of speech) {
+            speeches = speeches.concat(i.split('\n'));
+        }
     }
     if (speaker === "me") {
         for (let i in speeches) {
