@@ -113,7 +113,15 @@ let gamedata = {
             "dialogueWhenAccept" : "原来外面有免费的食物吗……正好我也有一点饿了……\n（将饥饿值恢复到 50 点以上吧）",
             "location" : "firstTown_hotel_corridor",
             "requirement" : "$gamedata.player.hunger >= 50",
+            "next" : "tutorial-talkwith"
         },
+        "tutorial-talkwith" : {
+            "name" : "和老板说说话",
+            "detail" : "移动到旅店的前厅，使用 talkwith 向老板询问关于自己的事情。",
+            "dialogueWhenAccept" : "话说回来，对于今天早上以前的事情，我是一点都想不起来，就连我是怎么到这里的都不知道。\n不如问问这间旅店的老板，他应该会知道些什么。",
+            "location" : "firetTown_hotel_lobby",
+            "requirement" : "talkwith boss about me"
+        }
         
     },
 
@@ -226,6 +234,9 @@ let gamedata = {
                     "meal" : [
                         "这边的饭菜怎么样？今天可是我掌勺！",
                         "我年轻的时候在王都的一间面包店做过厨师，在这镇上没有人比我更懂面包了！"
+                    ],
+                    "me" : [
+                        "你？我昨天要打烊的时候看到你昏倒在旅店外面，就把你背了进来，让你躺着休息。"
                     ]
                 }
             }

@@ -39,8 +39,9 @@ function checkTasks(playerAction) {
             deletedTasks.push(currentTask.name);
         }
     }
-    for (let i in deletedTasks) {
-        playerTasks.splice(i, 1);
+    for (let i of deletedTasks) {
+        nowDeleting = playerTasks.map((x) => x.name).indexOf(i);
+        playerTasks.splice(nowDeleting, 1);
     }
     pt();
     return;

@@ -133,6 +133,7 @@ let commandsList = {
     },
     "move" : function() {
         playerStartMoving();
+        return true;
     },
     "m" : "move",
     "say" : function() {
@@ -178,7 +179,8 @@ let commandsList = {
                 if (i.id === source) {
                     if (!i.hasOwnProperty("items")
                         || i.items.length === 0) {
-                        pterr(source, "里什么也没有。");
+                        pterr(describeItem(i, 0), "里什么也没有。");
+                        return false;
                     }
                     for (let j in i.items) {
                         if (i.items[j].id === target) {
