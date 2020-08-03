@@ -259,7 +259,9 @@ let gamedata = {
             "$playerRecognize(\"firstTown_hotel_travellers_room\");"
         ],
         "firetTown_hotel_lobby_list" : [
-            "本店提供住宿及餐饮。客房在二楼，餐厅在一楼。"
+            "本店提供住宿及餐饮。客房在二楼，餐厅在一楼。",
+            "餐厅营业时间：早上6点到下午2点，下午6点到次日上午2点。",
+            "“流浪汉之家”24小时开放，每天早上6点提供免费面包。"
         ]
     },
 

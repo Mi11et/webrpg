@@ -255,7 +255,7 @@ let commandsList = {
     },
     "start" : function() {
         let toggleCommandLimit = () => {
-            availableCommands.unavailable = ["start", "delete"];
+            availableCommands.unavailable = ["start", "delete", "savelist"];
             availableCommands.default = true;
         }
         if (arguments[0].length === 1 && arguments[0][0] === "new") {
@@ -356,6 +356,16 @@ let commandsList = {
             pt(target.name + "不知道你在说什么。");
             return false;
         }
+    },
+    "savelist" : function() {
+        pt("本地存档列表：");
+        pt(indent("编号", "2##4#") + indent("存档名", "4##16#"));
+        pt(indent("----", "2##4#") + indent("----------------", "4##16#"));
+        for (let i = 0; i < localStorage.length; i++) {
+            let saveName = localStorage.key(i);
+            pt(indent((i + 1).toString(), "2##4#") + indent(saveName, "4##16#"));
+        }
+        return true;
     }
 }
 

@@ -28,7 +28,6 @@ function indent(targetString, formatString) {
         return res;
     }
     let resultString = "";
-    let stringList = Array.from(arguments);
     let len = getLength(targetString);
     let format = formatString.split('#');
     resultString += tab(parseInt(format[0]));

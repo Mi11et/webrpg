@@ -74,9 +74,9 @@ function gameMainMenu() {
     pt("输入 start new 开始新的冒险。");
     pt("输入 start <存档名> 来继续过去的冒险。");
     pt("输入 delete <存档名> 来忘却过去的冒险。");
-    pt("注意：清楚浏览器缓存数据可能导致存档丢失。");
+    pt("注意：清除浏览器缓存数据可能导致存档丢失。");
     pt();
-    availableCommands.available = ["start", "delete"];
+    availableCommands.available = ["start", "delete", "savelist"];
     availableCommands.default = false;
     return;
 }
