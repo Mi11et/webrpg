@@ -197,7 +197,7 @@ function describeLocation() {
         }
     }
     // 打印地图
-    pt("周围有：")
+    pt("周围的地点：")
     printMap();
 }
 
