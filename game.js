@@ -71,9 +71,10 @@ function gameMainMenu() {
     // 显示主界面
     pt(gameTitleBig);
     pt("这是一个命令行冒险游戏，名字还没想好。应该会尽量中二一点。");
-    pt("输入 start new 开始新的冒险。");
-    pt("输入 start <存档名> 来继续过去的冒险。");
-    pt("输入 delete <存档名> 来忘却过去的冒险。");
+    pt("输入 start new 创建新存档。");
+    pt("输入 savelist 列出所有存档。");
+    pt("输入 start <存档名> 载入某一存档。");
+    pt("输入 delete <存档名> 删除某一存档。");
     pt("注意：清除浏览器缓存数据可能导致存档丢失。");
     pt();
     availableCommands.available = ["start", "delete", "savelist"];
