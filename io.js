@@ -30,6 +30,12 @@ function indent(targetString, formatString) {
     let resultString = "";
     let len = getLength(targetString);
     let format = formatString.split('#');
+    if (format.length > 4) return;
+    for (let i in format) {
+        if (format[i] === '' && i != 1) {
+            format[i] = 0;
+        }
+    }
     resultString += tab(parseInt(format[0]));
     let diff = tab(parseInt(format[2]) - len);
     if (format[1] === 'L' || format[1] === '') resultString += targetString + diff;
