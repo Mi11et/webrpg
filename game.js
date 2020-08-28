@@ -196,6 +196,27 @@ function describeLocation() {
             }
         }
     }
+    // 打印地图
+    pt("周围有：")
+    printMap();
+}
+
+function printMap() {
+    let nowLocation = gamedata.map[gamedata.player.location];
+    if (nowLocation.near.hasOwnProperty("up")) {
+        pt(indent(gamedata.map[nowLocation.near["up"]].name, "8###"));
+    }
+    if (nowLocation.near.hasOwnProperty("left")) {
+        pt(indent(gamedata.map[nowLocation.near["left"]].name, "###"));
+    }
+    pt(indent('【你的位置】', "8###"));
+    if (nowLocation.near.hasOwnProperty("right")) {
+        pt(indent(gamedata.map[nowLocation.near["right"]].name, "16###"));
+    }
+    if (nowLocation.near.hasOwnProperty("down")) {
+        pt(indent(gamedata.map[nowLocation.near["down"]].name, "8###"));
+    }
+    return;
 }
 
 function describeItem(item, type) {
@@ -310,7 +331,10 @@ function nextRound() {
 
 function waitForRounds(command) {
     // 玩家进行某项行为需要若干回合，若玩家当前行为被打断则返回 false
-    let rounds = gamedata.needTime[command];
+    let rounds = 0;
+    if (gamedata.needTime.hasOwnProperty(command)) {
+        rounds = gamedata.needTime[command];
+    }
     for (let i = 0; i < rounds; ++i) {
         nextRound();
         if (rounds > 1 && tempdata.player.interrupted === true) {

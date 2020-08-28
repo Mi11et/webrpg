@@ -366,6 +366,10 @@ let commandsList = {
             pt(indent((i + 1).toString(), "2##4#") + indent(saveName, "4##16#"));
         }
         return true;
+    },
+    "map" : function() {
+        printMap();
+        return true;
     }
 }
 
