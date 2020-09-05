@@ -52,7 +52,8 @@ let gamedata = {
             ],
             "near" : {
                 "up" : "firstTown_hotel_travellers_room",
-                "down" : "firetTown_hotel_lobby"
+                "down" : "firetTown_hotel_lobby",
+                "left" : "firetTown_hotel_dining_room"
             }
         },
         "firetTown_hotel_lobby" : {
@@ -67,6 +68,30 @@ let gamedata = {
             ],
             "near" : {
                 "up" : "firstTown_hotel_corridor"
+            }
+        },
+        "firetTown_hotel_dining_room" : {
+            "id" : "firetTown_hotel_dining_room",
+            "name" : "旅店的食堂",
+            "detail" : "旅客们在这里进餐，四周都是饭菜的香气。人们的说话声、碗筷碰撞声和后厨传来的锅铲撞击声交织在一起。",
+            "items" : [
+                {
+                    "id" : "list",
+                    "content" : "firetTown_hotel_dining_room_list"
+                }
+            ],
+            "near" : {
+                "right" : "firstTown_hotel_corridor",
+                "left" : "firetTown_hotel_kitchen"
+            }
+        },
+        "firetTown_hotel_kitchen" : {
+            "id" : "firetTown_hotel_kitchen",
+            "name" : "旅店的厨房",
+            "detail" : "厨房与餐厅只由一列柜台隔开。厨师们在这里卖力地工作，老板娘在柜台后招待顾客。",
+            "items" : [],
+            "near" : {
+                "right" : "firetTown_hotel_dining_room"
             }
         }
     },
@@ -262,6 +287,18 @@ let gamedata = {
             "本店提供住宿及餐饮。客房在二楼，餐厅在一楼。",
             "餐厅营业时间：早上6点到下午2点，下午6点到次日上午2点。",
             "“流浪汉之家”24小时开放，每天早上6点提供免费面包。"
+        ],
+        "firetTown_hotel_dining_room_list" : [
+            "#菜单",
+            "【主食类】",
+            "黑面包 -- 5G",
+            "面包 -- 10G",
+            "鸡肉三明治 -- 20G",
+            "牛排 -- 70G",
+            "【饮品类】",
+            "淡茶水 -- 免费",
+            "牛奶 -- 5G",
+            "玉米浓汤 -- 15G"
         ]
     },
 
