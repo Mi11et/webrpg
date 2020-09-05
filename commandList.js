@@ -335,14 +335,27 @@ let commandsList = {
             target = seekNPC(target);
         }
         let getDialog = (dialogs, dialog) => {
-            for (let cnt = 0; typeof dialogs[dialog] === "string"; cnt++) {
-                dialog = dialogs[dialog];
+            let checkJump = () => {
+                if (typeof dialogs[dialog] === "object") {
+                    dialog = dialogs[dialog][Math.floor(dialogs[dialog].length * Math.random())];
+                    return true;
+                }
+                if (typeof dialogs[dialog] === "string" && dialogs[dialog][0] == "@") {
+                    dialog = dialogs[dialog].substring(1);
+                    return true;
+                }
+                if (typeof dialog === "string" && dialog[0] == "@") {
+                    dialog = dialog.substring(1);
+                    return true;
+                }
+                return false;
+            }
+            for (let cnt = 0; checkJump(); cnt++) {
                 if (cnt >= 100) {
                     throw new Error("对话跳转陷入了死循环。");
                 }
             }
-            let speech = dialogs[dialog][Math.floor(dialogs[dialog].length * Math.random())];
-            return speech;
+            return dialog;
         }
         analyze(arguments[0]);
         if (target === false) {
