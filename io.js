@@ -8,6 +8,7 @@ window.onload = function() {
 function clearTextArea() {
     document.getElementById("input").value = "";
     document.getElementById("output").value = "";
+    inputHistory.init();
     return;
 }
 
@@ -177,12 +178,52 @@ function onReturn() {
         }
         return;
     }
-    // 在非移动模式下，按下回车后传递命令
+    // 非移动模式
+    if (event.keyCode === 38) {
+        // 上一条历史命令
+        event.preventDefault();
+        if (inputHistory.focus < inputHistory.list.length - 1) {
+            inputHistory.focus++;
+        }
+        if (inputHistory.focus != -1) {
+            document.getElementById("input").value = inputHistory.list[inputHistory.focus];
+        }
+    }
+    if (event.keyCode === 40) {
+        // 下一条历史命令
+        event.preventDefault();
+        if (inputHistory.focus > -1) {
+            inputHistory.focus--;
+        }
+        if (inputHistory.focus != -1) {
+            document.getElementById("input").value = inputHistory.list[inputHistory.focus];
+        } else {
+            document.getElementById("input").value = ""
+        }
+    }
     if (event.keyCode === 13) {
+        // 回车
         event.preventDefault();
         let inputString = document.getElementById("input").value;
         document.getElementById("input").value = "";
+
+        // 记入历史命令
+        if (inputString != inputHistory.list[inputHistory.focus]) {
+            inputHistory.list = [inputString].concat(inputHistory.list);
+        }
+        inputHistory.focus = -1;
+
+        // 传递命令
         getCommand(inputString);
         return;
     }
 }
+
+let inputHistory = {
+    init : () => {
+        focus = -1,
+        list = [];
+    },
+    focus : -1,
+    list : []
+};
