@@ -73,7 +73,7 @@ let gamedata = {
         "firetTown_hotel_dining_room" : {
             "id" : "firetTown_hotel_dining_room",
             "name" : "旅店的食堂",
-            "detail" : "旅客们在这里进餐，四周都是饭菜的香气。人们的说话声、碗筷碰撞声和后厨传来的锅铲撞击声交织在一起。",
+            "detail" : "旅客们在这里进餐，四周都是饭菜的香气。人们的说话声、碗筷碰撞声和后厨传来的锅铲撞击声交织在一起。\n柜台后面便是厨房。女主人正在柜台接待食客。",
             "items" : [
                 {
                     "id" : "list",
@@ -88,7 +88,7 @@ let gamedata = {
         "firetTown_hotel_kitchen" : {
             "id" : "firetTown_hotel_kitchen",
             "name" : "旅店的厨房",
-            "detail" : "厨房与餐厅只由一列柜台隔开。厨师们在这里卖力地工作，老板娘在柜台后招待顾客。",
+            "detail" : "厨房与餐厅只由一列柜台隔开。厨师们在这里卖力地工作。",
             "items" : [],
             "near" : {
                 "right" : "firetTown_hotel_dining_room"
@@ -262,6 +262,26 @@ let gamedata = {
                     ],
                     "me" : [
                         "你？我昨天要打烊的时候看到你昏倒在旅店外面，就把你背了进来，让你躺着休息。"
+                    ]
+                }
+            }
+        },
+        "10002" : {
+            "id" : "hostress",
+            "name" : "旅店女主人",
+            "location" : "firetTown_hotel_dining_room",
+            "items" : [],
+            "health" : 100,
+            "interactions" : {
+                "talk" : {
+                    "hotel" : "here",
+                    "here" : [
+                        "这间旅店是我丈夫祖上传下来的。听他说，这间旅店在这里开了几十年了。",
+                    ],
+                    "default" : "here",
+                    "meal" : [
+                        "你知道吗？这里的玉米浓汤可是镇上的一绝。",
+                        "我不太懂做饭，你可以去厨房和我们的大厨聊一聊。"
                     ]
                 }
             }
