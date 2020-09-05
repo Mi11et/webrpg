@@ -204,17 +204,25 @@ function describeLocation() {
 function printMap() {
     let nowLocation = gamedata.map[gamedata.player.location];
     if (nowLocation.near.hasOwnProperty("up")) {
-        pt(indent(gamedata.map[nowLocation.near["up"]].name, "8###"));
+        pt(indent(gamedata.map[nowLocation.near["up"]].name, "10###"));
+    } else {
+        pt();
     }
+    let middleLine = ""
     if (nowLocation.near.hasOwnProperty("left")) {
-        pt(indent(gamedata.map[nowLocation.near["left"]].name, "###"));
+        middleLine += indent(gamedata.map[nowLocation.near["left"]].name, "##8#2");
+    } else {
+        middleLine = indent("", "##10#");
     }
-    pt(indent('【你的位置】', "8###"));
+    middleLine += indent('【你的位置】', "##8#2");
     if (nowLocation.near.hasOwnProperty("right")) {
-        pt(indent(gamedata.map[nowLocation.near["right"]].name, "16###"));
+        middleLine += gamedata.map[nowLocation.near["right"]].name;
     }
+    pt(middleLine);
     if (nowLocation.near.hasOwnProperty("down")) {
-        pt(indent(gamedata.map[nowLocation.near["down"]].name, "8###"));
+        pt(indent(gamedata.map[nowLocation.near["down"]].name, "10###"));
+    } else {
+        pt();
     }
     return;
 }
