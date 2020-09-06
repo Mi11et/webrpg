@@ -92,7 +92,8 @@ let gamedata = {
             "items" : [],
             "near" : {
                 "right" : "firetTown_hotel_dining_room"
-            }
+            },
+            "nowindow" : true
         }
     },
 
