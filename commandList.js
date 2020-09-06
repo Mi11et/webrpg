@@ -317,7 +317,7 @@ let commandsList = {
         let seekNPC = (NPCName) => {
             for (let i in gamedata.npc) {
                 if (gamedata.npc[i].id === NPCName) {
-                    return gamedata.npc[i];
+                    return i;
                 }
             }
             return false;
@@ -362,11 +362,11 @@ let commandsList = {
             pterr("你要和谁说话？");
             return false;
         }
-        if (target.interactions.talk.hasOwnProperty(dialog)) {
-            characterSpeak(target, getDialog(target.interactions.talk, dialog));
+        if (gamedata.npcInteractions[target].talk.hasOwnProperty(dialog)) {
+            characterSpeak(gamedata.npc[target], getDialog(gamedata.npcInteractions[target].talk, dialog));
             return true;
         } else {
-            pt(target.name + "不知道你在说什么。");
+            pt(gamedata.npc[target].name + "不知道你在说什么。");
             return false;
         }
     },

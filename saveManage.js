@@ -1,7 +1,8 @@
 let ruleList = [
     "map.all.items",
     "player",
-    "global"
+    "global",
+    "npc"
 ];
 
 function loadData(dataname) {
