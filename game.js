@@ -153,6 +153,7 @@ function startTutorial() {
 function describeLocation() {
     // 描述玩家所在的地点
     let locationName = "";
+    // 获取地点名称
     if (gamedata.player.knownLocation.includes(gamedata.map[gamedata.player.location].id)) {
         locationName = gamedata.map[gamedata.player.location].name;
     } else {
@@ -172,6 +173,7 @@ function describeLocation() {
     let currentTime = getTime(gamedata.player);
     if (currentTime[0] != null) {
         let formatTime = (time) => {
+            // 将分钟数转换为X时X分
             while (time < 0) time += 24 * 60
             let hour = Math.floor(time / 60), minute = time % 60;
             let result = hour.toString() + "点";
@@ -197,22 +199,22 @@ function describeLocation() {
         }
     }
     // 打印地图
-    pt("周围的地点：")
     printMap();
 }
 
 function printMap() {
+    pt("周围的地点：");
     let nowLocation = gamedata.map[gamedata.player.location];
     if (nowLocation.near.hasOwnProperty("up")) {
-        pt(indent(gamedata.map[nowLocation.near["up"]].name, "10###"));
+        pt(indent(gamedata.map[nowLocation.near["up"]].name, "12###"));
     } else {
         pt();
     }
     let middleLine = ""
     if (nowLocation.near.hasOwnProperty("left")) {
-        middleLine += indent(gamedata.map[nowLocation.near["left"]].name, "##8#2");
+        middleLine += indent(gamedata.map[nowLocation.near["left"]].name, "2##8#2");
     } else {
-        middleLine = indent("", "##10#");
+        middleLine = indent("", "##12#");
     }
     middleLine += indent('【你的位置】', "##8#2");
     if (nowLocation.near.hasOwnProperty("right")) {
@@ -220,7 +222,7 @@ function printMap() {
     }
     pt(middleLine);
     if (nowLocation.near.hasOwnProperty("down")) {
-        pt(indent(gamedata.map[nowLocation.near["down"]].name, "10###"));
+        pt(indent(gamedata.map[nowLocation.near["down"]].name, "12###"));
     } else {
         pt();
     }

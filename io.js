@@ -128,6 +128,7 @@ function getCommand(inputString) {
 }
 
 function playerStartMoving() {
+    printMap();
     document.getElementById("input").readOnly = "readonly";
     document.getElementById("input").value = "移动中，按 m 停止移动";
     document.getElementById("input").style.textAlign = "center";
