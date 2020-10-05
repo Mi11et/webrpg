@@ -327,7 +327,8 @@ let commandsList = {
         let target = "", dialog = "";
         let seekNPC = (NPCName) => {
             for (let i in gamedata.npc) {
-                if (gamedata.npc[i].id === NPCName) {
+                if (gamedata.npc[i].id === NPCName 
+                    && gamedata.npc[i].location === gamedata.player.location) {
                     return i;
                 }
             }
@@ -402,7 +403,8 @@ let commandsList = {
         let target = "", source = "", sourceFlag = false;
         let seekNPC = (NPCName) => {
             for (let i in gamedata.npc) {
-                if (gamedata.npc[i].id === NPCName) {
+                if (gamedata.npc[i].id === NPCName 
+                    && gamedata.npc[i].location === gamedata.player.location) {
                     return i;
                 }
             }
