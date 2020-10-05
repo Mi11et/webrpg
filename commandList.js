@@ -105,7 +105,7 @@ let commandsList = {
         pt(indent("名字", "4##10#2") + gamedata.player.name);
         pt(indent("生命值", "4##10#2") + gamedata.player.health);
         pt(indent("饥饿值", "4##10#2") + gamedata.player.hunger);
-        pt(indent("金钱", "4##10#2") + gamedata.player.money);
+        pt(indent("金钱", "4##10#2") + gamedata.player.money + "G");
         return true;
     },
     "read" : function() {
