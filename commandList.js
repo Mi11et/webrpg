@@ -1,12 +1,14 @@
 let commandsList = {
     "help" : function() {
         // help ( ... )
+        // 打印所有命令或查看某一个命令的帮助
         if (arguments[0].length > 1) {
             pterr("一次只能查询一种命令。");
             return false;
         }
         let commandToQuery = "";
         if (arguments[0].length === 0) {
+            // 列出所有命令
             pt("列出所有命令如下，使用 help + 命令 来查看详细的使用方法。")
             let outputBuf = [];
             let printBuf = () => {
@@ -30,30 +32,36 @@ let commandsList = {
         }
         commandToQuery = arguments[0][0];
         if (gamedata.helpText.hasOwnProperty(commandToQuery)) {
+            // 打印指定命令的帮助文本
             pt(commandToQuery, "命令的使用方法如下：");
             for (let i in gamedata.helpText[commandToQuery]) {
                 pt(indent(i, "4##16#4") + gamedata.helpText[commandToQuery][i])
             }
             return true;
         } else {
+            // 玩家指定的命令不存在或暂无帮助
             pterr("找不到", commandToQuery, "命令的说明");
             return false;
         }
     },
     "look" : function() {
         // look ( ... )
+        // 观察周围或观察某一个物品
         waitForRounds("look");
         if (arguments[0].length === 0) {
+            // 观察周围
             pt("你看了看周围。");
             describeLocation();
             return true;
         } else {
+            // 观察某个物品
             let target = "";
             for (let i of arguments[0]) {
                 target += " " + i;
             }
             target = target.substring(1);
             let range = {};
+            // 从当前场景和玩家物品栏中搜索指定物品
             Object.assign(range, gamedata.player.items, gamedata.map[gamedata.player.location].items);
             for (let i in range) {
                 if (range[i].id === target) {
@@ -61,12 +69,14 @@ let commandsList = {
                     return true;
                 }
             }
+            // 没有找到指定的物品
             pt("这里没有", target, "。");
             return false;
         }
     },
     "inv" : function() {
         // inv
+        // 查看玩家物品栏
         if (arguments[0].length === 0) {
             if (gamedata.player.items.length === 0) {
                 pt("你身上什么也没有。");
@@ -85,6 +95,7 @@ let commandsList = {
     },
     "task" : function() {
         // task
+        // 查看玩家任务
         if (arguments[0].length > 0) {
             pterr("参数过多。");
             return false;
@@ -110,7 +121,9 @@ let commandsList = {
     },
     "read" : function() {
         // read ...
+        // 阅读指定物品上的文字
         if (arguments[0].length === 0) {
+            // 玩家未指定阅读的物品
             pterr("你要读什么？");
             return false;
         }
@@ -119,11 +132,13 @@ let commandsList = {
             target += " " + i;
         }
         target = target.substring(1);
+        // 从当前场景和玩家物品栏中搜索指定物品
         let range = {};
         Object.assign(range, gamedata.player.items, gamedata.map[gamedata.player.location].items);
         for (let i in range) {
             if (range[i].id === target) {
                 if (!range[i].hasOwnProperty("content")) {
+                    // 指定的物品上没有内容
                     pterr(target, "没什么好读的。")
                 }
                 waitForRounds("read");
@@ -131,6 +146,7 @@ let commandsList = {
                 return true;
             }
         }
+        // 没有找到指定的物品
         pt("这里没有", target, "。");
         return false;
     },
@@ -147,6 +163,7 @@ let commandsList = {
             target += " " + i;
         }
         if (target === "") {
+            // 玩家未输入要说的话
             pterr("你要说什么？");
             return false;
         }
@@ -158,6 +175,7 @@ let commandsList = {
     "get" : function() {
         // get ... ( from ... )
         let target = "", source = "", sourceFlag = false;
+        // 切分命令
         for (let i = 0; i < arguments[0].length; ++i) {
             if (arguments[0][i] === "from") {
                 sourceFlag = true;
@@ -170,21 +188,25 @@ let commandsList = {
             }
         }
         if (target === "") {
+            // 玩家未指定要拿取的物品
             pterr("你要拿什么？");
             return false;
         }
         if (sourceFlag && source === "") {
+            // 玩家指定的容器不存在
             pterr("你要从哪里拿？");
             return false;
         }
         target = target.substring(1);
         source = source.substring(1);
         if (sourceFlag) {
+            // 玩家指定了容器
             let sourceRange = gamedata.map[gamedata.player.location].items;
             for (let i of sourceRange) {
                 if (i.id === source) {
                     if (!i.hasOwnProperty("items")
                         || i.items.length === 0) {
+                        // 玩家指定的容器中没有物品，或玩家指定的不是容器
                         pterr(describeItem(i, 0), "里什么也没有。");
                         return false;
                     }
@@ -194,36 +216,43 @@ let commandsList = {
                                 waitForRounds("get");
                                 gamedata.player.items.push(i.items[j]);
                                 pt("你拿起了" + describeItem(i.items[j], 0) + "。");
-                                i.items.splice(j, 1);
+                                i.items.splice(j, 1); // 从容器中删除对应的物品
                                 return true;
                             } else {
+                                // 玩家指定的物品不可携带
                                 pt("你拿不起" + describeItem(i.items[j], 0) + "。");
                                 return false;
                             }
                         }
                     }
+                    // 玩家指定的容器中没有指定的物品
                     pt(source, "里没有", target, "。");
                     return false;
                 }
             }
+            // 场景中没有玩家指定的容器
             pt("这里没有", source, "。");
             return false;
         } else {
+            // 玩家未指定容器，从场景中拿取物品
             let range = gamedata.map[gamedata.player.location].items;
             for (let i in range) {
+                // 遍历场景中的物品
                 if (range[i].id === target) {
                     if (range[i].hasOwnProperty("carriable") && range[i].carriable === true) {
                         waitForRounds("get");
                         gamedata.player.items.push(range[i]);
                         pt("你拿起了" + describeItem(range[i], 0) + "。");
-                        range.splice(i, 1);
+                        range.splice(i, 1); // 从场景中删去对应物品
                         return true;
                     } else {
+                        // 玩家指定的物品不可携带
                         pt("你拿不起" + describeItem(range[i], 0) + "。");
                         return false;
                     }
                 }
             }
+            // 场景中没有玩家指定的物品
             pt("这里没有", target, "。");
             return false;
         }
@@ -231,10 +260,12 @@ let commandsList = {
     "eat" : function() {
         // eat ...
         if (arguments[0].length === 0) {
+            // 未指定目标
             pterr("你要吃什么？");
             return false;
         }
         if (gamedata.player.hunger >= 100) {
+            // 玩家饱食度过高
             pt("你吃不下别的东西了。");
             return false;
         }
@@ -242,41 +273,50 @@ let commandsList = {
         for (let i of arguments[0]) {
             target += " " + i;
         }
-        target = target.substring(1);
+        target = target.substring(1); // 删除多余空格
         let range = gamedata.player.items;
         for (let i of range) {
             if (i.id === target) {
                 if (!i.hasOwnProperty("nutrition")) {
+                    // 玩家指定的物品不是食物
                     pt(describeItem(i, 0) + "不是食物。");
                     return false;
                 }
                 waitForRounds("eat");
                 gamedata.player.hunger += i.nutrition;
                 pt("你吃掉了" + describeItem(i, 0));
+                // 从玩家物品栏中删去目标
                 range.splice(i, 1);
                 return true;
             }
         }
+        // 找不到玩家指定的物品
         pt("这里没有", target, "。");
         return false;
     },
     "start" : function() {
         // start new / ...
+        // 以某个存档/新存档开始游戏
         let toggleCommandLimit = () => {
+            // 切换可用的命令
             availableCommands.unavailable = ["start", "delete", "savelist"];
             availableCommands.default = true;
         }
         if (arguments[0].length === 1 && arguments[0][0] === "new") {
+            // 创建新存档
             clearTextArea();
             toggleCommandLimit();
+            // 存档数据初始化
             startTutorial();
             return true;
         }
         if (arguments[0].length != 1 
             || !localStorage.hasOwnProperty(arguments[0][0])) {
+            // 存档名不规范或指定的存档不存在
             pterr("你要载入哪一个存档？");
             return false;
         }
+        // 读取存档数据
         loadData(arguments[0][0]);
         clearTextArea();
         toggleCommandLimit();
@@ -285,9 +325,11 @@ let commandsList = {
     },
     "save" : function() {
         // save ( ... )
-        // 存档
+        // 把游戏状态保存到新存档或当前存档
         if (gamedata.global.currentSaveName === "") {
+            // 正在使用一个新存档，玩家需指定一个存档名
             if (arguments[0].length != 1) {
+                // 存档名不规范
                 pterr("存档名称只能为一个英文单词。");
                 return false;
             }
@@ -296,16 +338,20 @@ let commandsList = {
             pt("存档", gamedata.global.currentSaveName, "已保存。");
             return true;
         } else {
+            // 正在使用一个已保存的存档
             if (arguments[0].length === 0) {
+                // 保存到原有存档
                 saveData(gamedata.global.currentSaveName);
                 pt("存档", gamedata.global.currentSaveName, "已保存。");
                 return true;
             } else if (arguments[0].length === 1) {
+                // 保存到新存档
                 gamedata.global.currentSaveName = arguments[0][0];
                 saveData(arguments[0][0]);
                 pt("存档", gamedata.global.currentSaveName, "已保存。");
                 return true;
             } else {
+                // 存档名不规范
                 pterr("你要保存到哪一个存档？");
                 return false;
             }
@@ -315,6 +361,7 @@ let commandsList = {
         // delete ...
         if (arguments[0].length != 1 
             || !localStorage.hasOwnProperty(arguments[0][0])) {
+            // 存档名不规范或指定的存档不存在
             pterr("你要删除哪一个存档？");
             return false;
         }
@@ -347,16 +394,20 @@ let commandsList = {
             target = seekNPC(target);
         }
         let getDialog = (dialogs, dialog) => {
+            // 在对话树中跳转到指定的对话
             let checkJump = () => {
                 if (typeof dialogs[dialog] === "object") {
+                    // 如果某个对话节点有多个子对话，随机选择一项
                     dialog = dialogs[dialog][Math.floor(dialogs[dialog].length * Math.random())];
                     return true;
                 }
                 if (typeof dialogs[dialog] === "string" && dialogs[dialog][0] == "@") {
+                    // 如果一个对话节点指向另一个对话节点，直接跳转
                     dialog = dialogs[dialog].substring(1);
                     return true;
                 }
                 if (typeof dialog === "string" && dialog[0] == "@") {
+                    // 如果一个对话节点的子节点指向另一个对话节点，直接跳转
                     dialog = dialog.substring(1);
                     return true;
                 }
@@ -371,13 +422,20 @@ let commandsList = {
         }
         analyze(arguments[0]);
         if (target === false) {
+            // 玩家未指定交谈对象或交谈对象不存在
             pterr("你要和谁说话？");
             return false;
         }
+        if (!gamedata.npcInteractions[target].hasOwnProperty("talk")) {
+            // 该NPC无对话选项
+            pt(gamedata.npc[target].name + "不想和你说话。")
+        }
         if (gamedata.npcInteractions[target].talk.hasOwnProperty(dialog)) {
+            // 打印对话
             characterSpeak(gamedata.npc[target], getDialog(gamedata.npcInteractions[target].talk, dialog));
             return true;
         } else {
+            // 该NPC没有指定的对话选项
             pt(gamedata.npc[target].name + "不知道你在说什么。");
             return false;
         }
