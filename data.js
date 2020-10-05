@@ -238,7 +238,8 @@ let gamedata = {
             "moving" : false
         },
         "health" : 100,
-        "hunger" : 10
+        "hunger" : 10,
+        "money" : 0
     },
 
     "npc" : {
@@ -292,7 +293,18 @@ let gamedata = {
                     "你知道吗？这里的玉米浓汤可是镇上的一绝。",
                     "我不太懂做饭，你可以去厨房和我们的大厨聊一聊。"
                 ]
-            }
+            },
+            "trade" : [
+                {
+                    "item" : {
+                        "id" : "bread",
+                        "carriable" : true,
+                        "nutrition" : 30
+                    },
+                    "price" : 10,
+                    "sum" : Infinity
+                }
+            ]
         }
     },
 

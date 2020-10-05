@@ -147,7 +147,8 @@ function playerAddTask(taskName, from = null) {
 function startTutorial() {
     playerMove("firstTown_hotel_travellers_room", false);
     gamedata.player.name = "？？？";
-    playerAddTask("tutorial-whoami")
+    playerAddTask("tutorial-whoami");
+    gamedata.player.money = 10
 }
 
 function describeLocation() {
@@ -232,12 +233,13 @@ function printMap() {
 function describeItem(item, type) {
     // 描述一个物品。
     // type 参数为 0 或 1 分别表示简短描述和详细描述。
+    // type 为 -1 表示省略id的简短描述
     let res = "";
     let itemName = function() {
         let itemMaterial = item.hasOwnProperty("material") ? gamedata.material[item.material].name : "";
-        return itemMaterial + gamedata.names[item.id] + '（' + item.id + '）';
+        return itemMaterial + gamedata.names[item.id] + (type >= 0 ? ('（' + item.id + '）') : "");
     }
-    if (type === 0) {
+    if (type === 0 || type === -1) {
         if (item.hasOwnProperty("attributes")) {
             for (let i of item.attributes) {
                 res += gamedata.attribute[i].name + "的";

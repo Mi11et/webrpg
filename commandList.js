@@ -1,5 +1,6 @@
 let commandsList = {
     "help" : function() {
+        // help ( ... )
         if (arguments[0].length > 1) {
             pterr("一次只能查询一种命令。");
             return false;
@@ -40,6 +41,7 @@ let commandsList = {
         }
     },
     "look" : function() {
+        // look ( ... )
         waitForRounds("look");
         if (arguments[0].length === 0) {
             pt("你看了看周围。");
@@ -64,6 +66,7 @@ let commandsList = {
         }
     },
     "inv" : function() {
+        // inv
         if (arguments[0].length === 0) {
             if (gamedata.player.items.length === 0) {
                 pt("你身上什么也没有。");
@@ -81,6 +84,7 @@ let commandsList = {
         }
     },
     "task" : function() {
+        // task
         if (arguments[0].length > 0) {
             pterr("参数过多。");
             return false;
@@ -96,17 +100,16 @@ let commandsList = {
         return true;
     },
     "whoami" :　function() {
-        if (arguments[0].length > 0) {
-            pterr("参数过多。");
-            return false;
-        }
+        // whoami
         pt("=== 角色信息 ===============");
         pt(indent("名字", "4##10#2") + gamedata.player.name);
         pt(indent("生命值", "4##10#2") + gamedata.player.health);
         pt(indent("饥饿值", "4##10#2") + gamedata.player.hunger);
+        pt(indent("金钱", "4##10#2") + gamedata.player.money);
         return true;
     },
     "read" : function() {
+        // read ...
         if (arguments[0].length === 0) {
             pterr("你要读什么？");
             return false;
@@ -132,11 +135,13 @@ let commandsList = {
         return false;
     },
     "move" : function() {
+        // move / m
         playerStartMoving();
         return true;
     },
     "m" : "move",
     "say" : function() {
+        // say ...
         let target = "";
         for (let i of arguments[0]) {
             target += " " + i;
@@ -151,6 +156,7 @@ let commandsList = {
         return true;
     },
     "get" : function() {
+        // get ... ( from ... )
         let target = "", source = "", sourceFlag = false;
         for (let i = 0; i < arguments[0].length; ++i) {
             if (arguments[0][i] === "from") {
@@ -223,6 +229,7 @@ let commandsList = {
         }
     },
     "eat" : function() {
+        // eat ...
         if (arguments[0].length === 0) {
             pterr("你要吃什么？");
             return false;
@@ -254,6 +261,7 @@ let commandsList = {
         return false;
     },
     "start" : function() {
+        // start new / ...
         let toggleCommandLimit = () => {
             availableCommands.unavailable = ["start", "delete", "savelist"];
             availableCommands.default = true;
@@ -276,6 +284,7 @@ let commandsList = {
         return true;
     },
     "save" : function() {
+        // save ( ... )
         // 存档
         if (gamedata.global.currentSaveName === "") {
             if (arguments[0].length != 1) {
@@ -303,6 +312,7 @@ let commandsList = {
         }
     },
     "delete" : function() {
+        // delete ...
         if (arguments[0].length != 1 
             || !localStorage.hasOwnProperty(arguments[0][0])) {
             pterr("你要删除哪一个存档？");
@@ -313,6 +323,7 @@ let commandsList = {
         return true;
     },
     "talkwith" : function() {
+        // talkwith ... ( about ... )
         let target = "", dialog = "";
         let seekNPC = (NPCName) => {
             for (let i in gamedata.npc) {
@@ -371,6 +382,7 @@ let commandsList = {
         }
     },
     "savelist" : function() {
+        // savelist
         pt("本地存档列表：");
         pt(indent("编号", "2##4#") + indent("存档名", "4##16#"));
         pt(indent("----", "2##4#") + indent("----------------", "4##16#"));
@@ -381,8 +393,82 @@ let commandsList = {
         return true;
     },
     "map" : function() {
+        // map
         printMap();
         return true;
+    },
+    "buy" : function() {
+        // buy ... from ...
+        let target = "", source = "", sourceFlag = false;
+        let seekNPC = (NPCName) => {
+            for (let i in gamedata.npc) {
+                if (gamedata.npc[i].id === NPCName) {
+                    return i;
+                }
+            }
+            return false;
+        }
+        // 切分命令
+        for (let i = 0; i < arguments[0].length; ++i) {
+            if (arguments[0][i] === "from") {
+                sourceFlag = true;
+                continue;
+            }
+            if (sourceFlag) {
+                source += " " + arguments[0][i];
+            } else {
+                target += " " + arguments[0][i];
+            }
+        }
+        // 判断输入的命令是否符合语法
+        if (target === "") {
+            pterr("你要买什么？");
+            return false;
+        }
+        if (!sourceFlag || source === "") {
+            pterr("你要买谁的东西？");
+            return false;
+        }
+        // 删除多余空格
+        target = target.substring(1);
+        source = source.substring(1);
+        // 玩家指定了从哪里买东西
+        source = seekNPC(source);
+        if (source == false) {
+            // 玩家指定的NPC不存在
+            pterr("你要买谁的东西？");
+            return false;
+        }
+        if (!gamedata.npcInteractions[source].hasOwnProperty("trade")) {
+            // 该NPC无法交易
+            pt("这个人什么也不卖……");
+            return false;
+        }
+        // NPC可以交易
+        let sourceRange = gamedata.npcInteractions[source].trade;
+        for (let i of sourceRange) {
+            if (i.item.id === target) {
+                if (i.sum <= 0) {
+                    // 该物品已经被NPC卖完了
+                    characterSpeak(gamedata.npc[source], "我的" + describeItem(i.item, -1) + "已经卖完了……");
+                    return false;
+                }
+                if (i.price > gamedata.player.money) {
+                    // 玩家没有足够的钱
+                    pt("你买不起" + describeItem(i.item, -1) + "。");
+                    return false;
+                }
+                // 购买物品
+                gamedata.player.items.push(i.item);
+                gamedata.player.money -= i.price;
+                i.sum -= 1;
+                pt("你从" + gamedata.npc[source].name + "那里购买了" + describeItem(i.item, -1)) + "。";
+                return true;
+            }
+        }
+        // NPC不卖该物品
+        pt("这个人没有", target, "。");
+        return false;
     }
 }
 
