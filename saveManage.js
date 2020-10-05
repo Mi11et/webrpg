@@ -2,7 +2,8 @@ let ruleList = [
     "map.all.items",
     "player",
     "global",
-    "npc"
+    "npc",
+    "npcInteractions.all.trade.all.sum"
 ];
 
 function loadData(dataname) {
