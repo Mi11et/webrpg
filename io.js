@@ -17,10 +17,10 @@ function indent(targetString, formatString) {
     // 参数为要缩进的字符串和一个表示缩进方法的字符串。
     // 缩进方法的格式为：左侧空格数 + L/R + 期望长度 + 右侧空格数，用 # 分隔
     // 左/右侧空格数默认为 0 ，缩进方法默认为左对齐（L），期望长度默认为字符串长度
-    let getLength = function(str) {
+    let getLength = (str) => {
         return str.replace(/[\u4e00-\u9fff]/g, "__").length;
     }; 
-    let tab = function(spaceLength) {
+    let tab = (spaceLength) => {
         if (spaceLength <= 0) return "";
         let res = "";
         for (let spaceCnt = 0; spaceCnt < spaceLength; spaceCnt++) {
@@ -37,18 +37,18 @@ function indent(targetString, formatString) {
             format[i] = 0;
         }
     }
-    resultString += tab(parseInt(format[0]));
+    resultString += tab(parseInt(format[0])); // 左侧空格
     let diff = tab(parseInt(format[2]) - len);
-    if (format[1] === 'L' || format[1] === '') resultString += targetString + diff;
-    if (format[1] === 'R') resultString += diff + targetString;
-    resultString += tab(parseInt(format[3]));
+    if (format[1] === 'L' || format[1] === '') resultString += targetString + diff; // 左对齐
+    if (format[1] === 'R') resultString += diff + targetString; // 右对齐
+    resultString += tab(parseInt(format[3])); // 右侧空格
     return resultString;
 }
 
 function pt() {
     // 打印输出，以空格为间隔，以换行结尾。
     let outBuf = "";
-    let put = function(val) {
+    let put = (val) => {
         outBuf += val;
     };
     if (arguments.length > 0) {
@@ -66,7 +66,7 @@ function pt() {
 function pterr() {
     // 打印错误，和 pt() 类似。
     let outBuf = "";
-    let put = function(val) {
+    let put = (val) => {
         outBuf += val;
     };
     let outs = Array.from(arguments);
