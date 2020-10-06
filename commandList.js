@@ -523,6 +523,7 @@ let commandsList = {
                 gamedata.player.money -= i.price;
                 i.sum -= 1;
                 pt("你从" + gamedata.npc[source].name + "那里购买了" + describeItem(i.item, -1) + "。");
+                pt("你付给" + gamedata.npc[source].name + "" + i.price + "G。");
                 return true;
             }
         }
