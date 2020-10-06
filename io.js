@@ -160,6 +160,10 @@ function onReturn() {
     }
     if (gamedata.player.status.moving) {
         event.preventDefault();
+        if (event.repeat === true) {
+            // 避免长按导致多次移动
+            return;
+        }
         switch (event.keyCode) {
             case 87: {
                 moveNear("up"); break; // w
