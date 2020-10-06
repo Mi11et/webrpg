@@ -337,6 +337,7 @@ function nextRound() {
         return;
     }
     timePass();
+    checkEvents();
     return;
 }
 
@@ -353,4 +354,29 @@ function waitForRounds(command) {
         }
     }
     return true;
+}
+
+function addItem(target, item, num) {
+    // 给某个对象一定数量的物品
+    if (!target.hasOwnProperty("items")) {
+        console.warn("指定的对象没有items属性，已添加。");
+        target.items = [];
+    }
+    for (let i = 0; i < num; i++) {
+        target.items.push(item);
+    }
+    return;
+}
+
+function checkEvents() {
+    // 检查事件是否发生
+    for (let i of gamedata.events) {
+        if (eval(i.requirement.substring(1))) {
+            // 满足事件发生条件
+            if (i.hasOwnProperty("event")) {
+                i.event();
+            }
+        }
+    }
+    return;
 }

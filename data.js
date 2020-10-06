@@ -151,6 +151,25 @@ let gamedata = {
         
     },
 
+    "events" : [
+        {
+            "requirement" : "$gamedata.global.time === 300",
+            "event" : () => {
+                for (let i of gamedata.map["firstTown_hotel_corridor"].items) {
+                    if (i.id === "shelf") {
+                        addItem(i, {
+                            "id" : "bread",
+                            "carriable" : true,
+                            "nutrition" : 30
+                        }, 2);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+    ],
+
     "material" : {
         "wood" : {
             "name" : "木"
