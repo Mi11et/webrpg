@@ -330,7 +330,7 @@ let gamedata = {
                         "nutrition" : 30
                     },
                     "price" : 10,
-                    "sum" : Infinity
+                    "sum" : -1
                 }
             ]
         }

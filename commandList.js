@@ -508,7 +508,7 @@ let commandsList = {
         let sourceRange = gamedata.npcInteractions[source].trade;
         for (let i of sourceRange) {
             if (i.item.id === target) {
-                if (i.sum <= 0) {
+                if (i.sum === 0) {
                     // 该物品已经被NPC卖完了
                     characterSpeak(gamedata.npc[source], "我的" + describeItem(i.item, -1) + "已经卖完了……");
                     return false;
@@ -521,7 +521,9 @@ let commandsList = {
                 // 购买物品
                 gamedata.player.items.push(i.item);
                 gamedata.player.money -= i.price;
-                i.sum -= 1;
+                if (i.sum > 0) {
+                    i.sum -= 1;
+                }
                 pt("你从" + gamedata.npc[source].name + "那里购买了" + describeItem(i.item, -1) + "。");
                 pt("你付给" + gamedata.npc[source].name + "" + i.price + "G。");
                 return true;

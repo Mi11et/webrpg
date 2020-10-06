@@ -26,9 +26,11 @@ function mergeByRule(dest, src, rule) {
     let nextRule = rule.substring(dotPos + 1);
     if (target === "all") {
         if (nextRule === "") {
+            // 直接替换当前子节点
             dest = src;
             return;
         }
+        // 对当前节点的所有子节点执行操作
         for (let i in src) {
             if (!dest.hasOwnProperty(i)) {
                 dest[i] = {};
@@ -36,12 +38,18 @@ function mergeByRule(dest, src, rule) {
             mergeByRule(dest[i], src[i], nextRule);
         }
     } else {
-        if (nextRule === "") {
-            dest[target] = src[target];
+        // 对指定子节点执行操作
+        if (!src.hasOwnProperty(target)) {
+            // 当前节点没有对应子节点
             return;
         }
         if (!dest.hasOwnProperty(target)) {
             dest[target] = {};
+        }
+        if (nextRule === "") {
+            // 直接替换指定子节点
+            dest[target] = src[target];
+            return;
         }
         mergeByRule(dest[target], src[target], nextRule);
     }
