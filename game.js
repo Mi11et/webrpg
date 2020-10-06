@@ -216,7 +216,7 @@ function printMap() {
     } else {
         middleLine = indent("", "##12#");
     }
-    middleLine += indent('【你的位置】', "##8#2");
+    middleLine += indent('【' + nowLocation.name + '】', "##8#2");
     if (nowLocation.near.hasOwnProperty("right")) {
         middleLine += gamedata.map[nowLocation.near["right"]].name;
     }
