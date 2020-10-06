@@ -259,10 +259,24 @@ function describeItem(item, type) {
             if (item.items.length === 0) {
                 res += "里面什么也没有。\n";
             } else {
+                let outputBuf = [];
+                let printBuf = () => {
+                    let buf = "";
+                    for (let j of outputBuf) {
+                        buf += indent(j, "##16#");
+                    }
+                    res += ("  " + buf + "\n");
+                    return;
+                }
                 res += "里面有：\n";
                 for (let i of item.items) {
-                    res += indent(describeItem(i, 0), "4###");
+                    outputBuf.push(describeItem(i, 0));
+                    if (outputBuf.length === 4) {
+                        printBuf();
+                        outputBuf = [];
+                    }
                 }
+                printBuf();
             }
         }
         // 物品上有可以阅读的内容

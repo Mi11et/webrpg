@@ -9,7 +9,7 @@ let commandsList = {
         let commandToQuery = "";
         if (arguments[0].length === 0) {
             // 列出所有命令
-            pt("列出所有命令如下，使用 help + 命令 来查看详细的使用方法。")
+            pt("列出所有命令如下，使用 help + 命令 来查看详细的使用方法。");
             let outputBuf = [];
             let printBuf = () => {
                 let buf = "";
@@ -207,7 +207,7 @@ let commandsList = {
                     if (!i.hasOwnProperty("items")
                         || i.items.length === 0) {
                         // 玩家指定的容器中没有物品，或玩家指定的不是容器
-                        pterr(describeItem(i, 0), "里什么也没有。");
+                        pterr(describeItem(i, -1) + "里什么也没有。");
                         return false;
                     }
                     for (let j in i.items) {
@@ -215,12 +215,12 @@ let commandsList = {
                             if (i.items[j].hasOwnProperty("carriable") && i.items[j].carriable === true) {
                                 waitForRounds("get");
                                 gamedata.player.items.push(i.items[j]);
-                                pt("你拿起了" + describeItem(i.items[j], 0) + "。");
+                                pt("你拿起了" + describeItem(i.items[j], -1) + "。");
                                 i.items.splice(j, 1); // 从容器中删除对应的物品
                                 return true;
                             } else {
                                 // 玩家指定的物品不可携带
-                                pt("你拿不起" + describeItem(i.items[j], 0) + "。");
+                                pt("你拿不起" + describeItem(i.items[j], -1) + "。");
                                 return false;
                             }
                         }
