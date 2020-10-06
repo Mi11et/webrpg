@@ -225,6 +225,15 @@ let gamedata = {
         "talkwith" : {
             "talkwith <对象>" : "和某人聊聊天。",
             "talkwith <对象> about <内容>" : "和某人聊聊某件事。"
+        },
+        "savelist" : {
+            "savelist" : "查看所有存档。"
+        },
+        "map" : {
+            "map" : "查看周围的地点。"
+        },
+        "buy" : {
+            "buy <物品> from <对象>" : "从某人那里买某件东西。"
         }
     },
 
