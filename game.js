@@ -9,7 +9,7 @@ function checkTasks(playerAction) {
     let deletedTasks = [];
     for (let currentTask of playerTasks) {
         if (checkRequirement(currentTask)
-                && [gamedata.player.location, "any"].includes(currentTask.location)) {
+            && [gamedata.player.location, "any"].includes(currentTask.location)) {
             // 如果玩家（在指定地点）完成了任务
             pt("你完成了任务【" + currentTask.name + "】。");
             if (currentTask.hasOwnProperty("additional")) {
@@ -21,7 +21,6 @@ function checkTasks(playerAction) {
                             deletedTasks.push(j.name);
                         }
                     }
-                    
                 }
             }
             if (currentTask.hasOwnProperty("dialogueWhenFinish")) {
@@ -235,7 +234,7 @@ function describeItem(item, type) {
     // type 参数为 0 或 1 分别表示简短描述和详细描述。
     // type 为 -1 表示省略id的简短描述
     let res = "";
-    let itemName = function() {
+    let itemName = () => {
         let itemMaterial = item.hasOwnProperty("material") ? gamedata.material[item.material].name : "";
         return itemMaterial + gamedata.names[item.id] + (type >= 0 ? ('（' + item.id + '）') : "");
     }

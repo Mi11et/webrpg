@@ -19,7 +19,7 @@ function indent(targetString, formatString) {
     // 左/右侧空格数默认为 0 ，缩进方法默认为左对齐（L），期望长度默认为字符串长度
     let getLength = (str) => {
         return str.replace(/[\u4e00-\u9fff]/g, "__").length;
-    }; 
+    }
     let tab = (spaceLength) => {
         if (spaceLength <= 0) return "";
         let res = "";

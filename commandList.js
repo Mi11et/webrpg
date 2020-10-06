@@ -366,7 +366,7 @@ let commandsList = {
             return false;
         }
         localStorage.removeItem(arguments[0][0]);
-        pt("存档", arguments[0][0] , "已删除。");
+        pt("存档", arguments[0][0], "已删除。");
         return true;
     },
     "talkwith" : function() {
@@ -374,7 +374,7 @@ let commandsList = {
         let target = "", dialog = "";
         let seekNPC = (NPCName) => {
             for (let i in gamedata.npc) {
-                if (gamedata.npc[i].id === NPCName 
+                if (gamedata.npc[i].id === NPCName
                     && gamedata.npc[i].location === gamedata.player.location) {
                     return i;
                 }
