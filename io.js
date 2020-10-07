@@ -213,10 +213,13 @@ function onReturn() {
         document.getElementById("input").value = "";
 
         // 记入历史命令
-        if (inputString != inputHistory.list[inputHistory.focus]) {
+        if (inputString === inputHistory.list[inputHistory.focus] && inputHistory.focus === 0) {
+            // 如果当前命令和上一条历史命令相同，则不记入
+        } else {
+            // 否则记入历史命令
             inputHistory.list = [inputString].concat(inputHistory.list);
         }
-        inputHistory.focus = -1;
+        inputHistory.focus = -1; // 指针归零
 
         // 传递命令
         getCommand(inputString);
