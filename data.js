@@ -167,6 +167,23 @@ let gamedata = {
                 }
                 return false;
             }
+        },
+        {
+            "event" : () => {
+                if (gamedata.player.hunger > 0) {
+                    // 玩家每回合损失饱食度
+                    if (gamedata.player.hunger > 30) {
+                        gamedata.player.hunger -= 2;
+                    } else {
+                        gamedata.player.hunger -= 1;
+                    }
+                } else {
+                    // 若饱食度为0则损失生命值
+                    if (gamedata.player.health > 10) {
+                        gamedata.player.health -= 2;
+                    }
+                }
+            }
         }
     ],
 

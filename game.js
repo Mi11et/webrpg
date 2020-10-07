@@ -385,10 +385,20 @@ function addItem(target, item, num) {
 function checkEvents() {
     // 检查事件是否发生
     for (let i of gamedata.events) {
-        if (eval(i.requirement.substring(1))) {
-            // 满足事件发生条件
+        if (!i.hasOwnProperty("requirement")) {
+            // 该事件发生不需要任何条件
             if (i.hasOwnProperty("event")) {
                 i.event();
+                continue;
+            }
+        }
+        if (typeof i.requirement === "string") {
+            if (i.requirement[0] === "$" && eval(i.requirement.substring(1))) {
+                // 满足事件发生条件
+                if (i.hasOwnProperty("event")) {
+                    i.event();
+                    continue;
+                }
             }
         }
     }
