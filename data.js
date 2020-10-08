@@ -52,46 +52,46 @@ let gamedata = {
             ],
             "near" : {
                 "up" : "firstTown_hotel_travellers_room",
-                "down" : "firetTown_hotel_lobby",
-                "left" : "firetTown_hotel_dining_room"
+                "down" : "firstTown_hotel_lobby",
+                "left" : "firstTown_hotel_dining_room"
             }
         },
-        "firetTown_hotel_lobby" : {
-            "id" : "firetTown_hotel_lobby",
+        "firstTown_hotel_lobby" : {
+            "id" : "firstTown_hotel_lobby",
             "name" : "旅店的前厅",
             "detail" : "前厅里没有什么人，只有老板百无聊赖地坐在柜台后面，似乎在打盹。",
             "items" : [
                 {
                     "id" : "list",
-                    "content" : "firetTown_hotel_lobby_list"
+                    "content" : "firstTown_hotel_lobby_list"
                 }
             ],
             "near" : {
                 "up" : "firstTown_hotel_corridor"
             }
         },
-        "firetTown_hotel_dining_room" : {
-            "id" : "firetTown_hotel_dining_room",
+        "firstTown_hotel_dining_room" : {
+            "id" : "firstTown_hotel_dining_room",
             "name" : "旅店的食堂",
             "detail" : "旅客们在这里进餐，四周都是饭菜的香气。人们的说话声、碗筷碰撞声和后厨传来的锅铲撞击声交织在一起。\n柜台后面便是厨房。女主人正在柜台接待食客。",
             "items" : [
                 {
                     "id" : "list",
-                    "content" : "firetTown_hotel_dining_room_list"
+                    "content" : "firstTown_hotel_dining_room_list"
                 }
             ],
             "near" : {
                 "right" : "firstTown_hotel_corridor",
-                "left" : "firetTown_hotel_kitchen"
+                "left" : "firstTown_hotel_kitchen"
             }
         },
-        "firetTown_hotel_kitchen" : {
-            "id" : "firetTown_hotel_kitchen",
+        "firstTown_hotel_kitchen" : {
+            "id" : "firstTown_hotel_kitchen",
             "name" : "旅店的厨房",
             "detail" : "厨房与餐厅只由一列柜台隔开。厨师们在这里卖力地工作。",
             "items" : [],
             "near" : {
-                "right" : "firetTown_hotel_dining_room"
+                "right" : "firstTown_hotel_dining_room"
             },
             "nowindow" : true
         }
@@ -145,10 +145,18 @@ let gamedata = {
             "name" : "和老板说说话",
             "detail" : "移动到旅店的前厅，使用 talkwith 向老板询问关于自己的事情。",
             "dialogueWhenAccept" : "话说回来，对于今天早上以前的事情，我是一点都想不起来，就连我是怎么到这里的都不知道。\n不如问问这间旅店的老板，他应该会知道些什么。",
-            "location" : "firetTown_hotel_lobby",
+            "location" : "firstTown_hotel_lobby",
             "requirement" : "talkwith boss about me"
+        },
+        "firstTown_hotel-food_delivery" : {
+            "name" : "给老板带饭",
+            "detail" : "把老板娘给的三明治带给老板。",
+            "location" : "firstTown_hotel_lobby",
+            "requirement" : "give sandwich to boss",
+            "reward" : {
+                "money" : 5
+            }
         }
-        
     },
 
     "events" : [
@@ -156,7 +164,7 @@ let gamedata = {
             "requirement" : "$gamedata.global.time === 300",
             "event" : () => {
                 for (let i of gamedata.map["firstTown_hotel_corridor"].items) {
-                    if (i.id === "shelf") {
+                    if (i.id === "shelf" && countItem(i, { "id" : "bread" }) <= 4) {
                         addItem(i, {
                             "id" : "bread",
                             "carriable" : true,
@@ -291,14 +299,14 @@ let gamedata = {
         "10001" : {
             "id" : "boss",
             "name" : "旅店老板",
-            "location" : "firetTown_hotel_lobby",
+            "location" : "firstTown_hotel_lobby",
             "items" : [],
             "health" : 100
         },
         "10002" : {
             "id" : "hostress",
             "name" : "旅店女主人",
-            "location" : "firetTown_hotel_dining_room",
+            "location" : "firstTown_hotel_dining_room",
             "items" : [],
             "health" : 100
         }
@@ -307,37 +315,72 @@ let gamedata = {
     "npcInteractions" : {
         "10001" : {
             "talk" : {
-                "hotel" : [
-                    "这间旅店是我祖上传下来的，有几十年历史了。",
-                    "这个小镇位于两国边境，平时来往的旅人很多，所以旅店的生意很好。",
-                ],
-                "here" : [
-                    "@hotel",
-                    "虽然附近的两国在边境时有冲突，但这个边境小镇一直很安宁。"
-                ],
+                "hotel" : {
+                    "type" : "random",
+                    "content" : [
+                        "这间旅店是我祖上传下来的，有几十年历史了。",
+                        "这个小镇位于两国边境，平时来往的旅人很多，所以旅店的生意很好。",
+                    ]
+                },
+                "here" : {
+                    "type" : "random",
+                    "content" : [
+                        "@hotel",
+                        "虽然附近的两国在边境时有冲突，但这个边境小镇一直很安宁。"
+                    ]
+                },
                 "default" : "@hotel",
-                "meal" : [
-                    "这边的饭菜怎么样？今天可是我掌勺！",
-                    "我年轻的时候在王都的一间面包店做过厨师，在这镇上没有人比我更懂面包了！"
-                ],
-                "me" : [
-                    "你？我昨天要打烊的时候看到你昏倒在旅店外面，就把你背了进来，让你躺着休息。"
-                ]
+                "meal" : {
+                    "type" : "random",
+                    "content" : [
+                        "这边的饭菜怎么样？今天可是我掌勺！",
+                        "我年轻的时候在王都的一间面包店做过厨师，在这镇上没有人比我更懂面包了！"
+                    ]
+                },
+                "me" : {
+                    "type" : "random",
+                    "content" : [
+                        "你？我昨天要打烊的时候看到你昏倒在旅店外面，就把你背了进来，让你躺着休息。"
+                    ]
+                }
             }
         },
         "10002" : {
             "talk" : {
-                "hotel" : [
-                    "这间旅店是我丈夫祖上传下来的。听他说，这间旅店在这里开了几十年了。",
-                ],
-                "here" : [
-                    "这里白天不是特别热闹，但一到晚上，各种各样的人们都聚在这里吃喝谈天，直到半夜。",
-                ],
+                "hotel" : {
+                    "type" : "random",
+                    "content" : [
+                        "这间旅店是我丈夫祖上传下来的。听他说，这间旅店在这里开了几十年了。",
+                    ]
+                },
+                "here" : {
+                    "type" : "random",
+                    "content" : [
+                        "这里白天不是特别热闹，但一到晚上，各种各样的人们都聚在这里吃喝谈天，直到半夜。",
+                        "@hotel"
+                    ]
+                },
                 "default" : "@meal",
-                "meal" : [
-                    "你知道吗？这里的玉米浓汤可是镇上的一绝。",
-                    "我不太懂做饭，你可以去厨房和我们的大厨聊一聊。"
-                ]
+                "meal" : {
+                    "type" : "all",
+                    "content" : [
+                        {
+                            "type" : "random",
+                            "content" : [
+                                "你知道吗？这里的玉米浓汤可是镇上的一绝。",
+                                "我不太懂做饭，你可以去厨房和我们的大厨聊一聊。"
+                            ]
+                        },
+                        {
+                            "type" : "all",
+                            "requirement" : "$(time >= 720 && time < 780) || (time >= 1080 && time < 1140)",
+                            "content" : [
+                                "已经到了吃饭时间，可以请你把这个三明治带给我丈夫吗？他就在旅店的前台。",
+                                "$playerAddTask(\"firstTown_hotel-food_delivery\")"
+                            ]
+                        }
+                    ]
+                }
             },
             "trade" : [
                 {
@@ -368,12 +411,12 @@ let gamedata = {
             "@旅店老板",
             "$playerRecognize(\"firstTown_hotel_travellers_room\");"
         ],
-        "firetTown_hotel_lobby_list" : [
+        "firstTown_hotel_lobby_list" : [
             "本店提供住宿及餐饮。客房在二楼，餐厅在一楼。",
             "餐厅营业时间：早上6点到下午2点，下午6点到次日上午2点。",
             "“流浪汉之家”24小时开放，每天早上6点提供免费面包。"
         ],
-        "firetTown_hotel_dining_room_list" : [
+        "firstTown_hotel_dining_room_list" : [
             "#菜单",
             "【主食类】",
             "黑面包 -- 5G",
@@ -393,6 +436,8 @@ let gamedata = {
         "read" : 1,
         "get" : 1,
         "say" : 1,
+        "talkwith" : 1,
+        "buy" : 1
     }
 }
 

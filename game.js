@@ -23,6 +23,20 @@ function checkTasks(playerAction) {
                     }
                 }
             }
+            if (currentTask.hasOwnProperty("reward")) {
+                // 完成任务后的奖励
+                let reward = currentTask.reward;
+                if (reward.hasOwnProperty("money")) {
+                    gamedata.player.money += reward.money;
+                    pt("你获得了" + reward.money + "G。");
+                }
+                if (reward.hasOwnProperty("items")) {
+                    for (let i of reward.items) {
+                        addItem(gamedata.player, i, 1);
+                        pt("你获得了" + describeItem(i, -1) + "。");
+                    }
+                }
+            }
             if (currentTask.hasOwnProperty("dialogueWhenFinish")) {
                 // 完成任务之后的对话
                 characterSpeak("me", currentTask.dialogueWhenFinish);
@@ -95,10 +109,16 @@ function characterSpeak(speaker, speech) {
     }
     if (speaker === "me") {
         for (let i in speeches) {
+            if (speeches[i] === "") {
+                continue;
+            }
             pt("【我】" + speeches[i]);
         }
     } else {
         for (let i in speeches) {
+            if (speeches[i] === "") {
+                continue;
+            }
             pt("【" + speaker.name + "】" + speeches[i]);
         }
     }
@@ -121,7 +141,9 @@ function playerMove(dest, recognize = true) {
 
 function playerAddTask(taskName, from = null) {
     // 给玩家增加一项任务
+    // from 表示该任务是某个任务的附加任务
     if (gamedata.tasks.hasOwnProperty(taskName) === false) {
+        console.warn("任务" + taskName + "不存在。");
         return;
     }
     gamedata.player.tasks.push(gamedata.tasks[taskName]);
@@ -342,7 +364,7 @@ function nextRound() {
     // 进入下一回合
     let timePass = () => {
         let time = gamedata.global.time;
-        time += 10;
+        time += 5;
         if (time > 24 * 60) {
             time -= 24 * 60;
             gamedata.global.date += 1;
@@ -370,7 +392,7 @@ function waitForRounds(command) {
     return true;
 }
 
-function addItem(target, item, num) {
+function addItem(target, item, num = 1) {
     // 给某个对象一定数量的物品
     if (!target.hasOwnProperty("items")) {
         console.warn("指定的对象没有items属性，已添加。");
@@ -403,4 +425,42 @@ function checkEvents() {
         }
     }
     return;
+}
+
+function countItem(range, targetAttr) {
+    // 在range中寻找满足targetAttr的物品，返回个数
+    if (!range.hasOwnProperty("items")) {
+        // 若range无items属性，返回0
+        return 0;
+    }
+    let cnt = 0; // 满足条件的物品数量
+    for (let i of range.items) {
+        let flag = true;
+        for (let j in targetAttr) {
+            // 对于range中的每一个物品，检查targetAttr的每一个参数
+            if (!i.hasOwnProperty(j) || i.j !== targetAttr.j) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag === true) {
+            cnt += 1;
+        }
+    }
+    return cnt;
+}
+
+function parseScript(script) {
+    // 将一段形如"$..."的字符串转换为合法的js语句
+    let replace = (str, keyword, replacement) => {
+        // 代替replaceAll
+        str = str.replaceAll(replacement, keyword);
+        str = str.replaceAll(keyword, replacement);
+        return str;
+    }
+    if (script[0] === "$") {
+        script = script.substring(1);
+    }
+    script = replace(script, "time", "gamedata.global.time");
+    return script;
 }

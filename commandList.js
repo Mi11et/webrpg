@@ -393,32 +393,38 @@ let commandsList = {
             }
             target = seekNPC(target);
         }
-        let getDialog = (dialogs, dialog) => {
-            // 在对话树中跳转到指定的对话
-            let checkJump = () => {
-                if (typeof dialogs[dialog] === "object") {
-                    // 如果某个对话节点有多个子对话，随机选择一项
-                    dialog = dialogs[dialog][Math.floor(dialogs[dialog].length * Math.random())];
-                    return true;
-                }
-                if (typeof dialogs[dialog] === "string" && dialogs[dialog][0] == "@") {
-                    // 如果一个对话节点指向另一个对话节点，直接跳转
-                    dialog = dialogs[dialog].substring(1);
-                    return true;
-                }
-                if (typeof dialog === "string" && dialog[0] == "@") {
-                    // 如果一个对话节点的子节点指向另一个对话节点，直接跳转
-                    dialog = dialog.substring(1);
-                    return true;
-                }
-                return false;
-            }
-            for (let cnt = 0; checkJump(); cnt++) {
-                if (cnt >= 100) {
-                    throw new Error("对话跳转陷入了死循环。");
+        let getDialog = (dialogNode) => {
+            // 在对话树中跳转到指定的对话，并输出
+            if (typeof dialogNode === "string") {
+                if (dialogNode[0] === "$") {
+                    //执行命令
+                    eval(parseScript(dialogNode));
+                    return "";
+                } else if (dialogNode[0] === "@") {
+                    // 跳转
+                    getDialog(gamedata.npcInteractions[target].talk[dialogNode.substring(1)]);
+                } else {
+                    characterSpeak(gamedata.npc[target], dialogNode + "\n");
                 }
             }
-            return dialog;
+            if (typeof dialogNode === "object") {
+                if (dialogNode.hasOwnProperty("requirement")) {
+                    if (eval(parseScript(dialogNode.requirement)) === false) {
+                        // 未达成触发对话所需条件
+                        return "";
+                    }
+                }
+                if (dialogNode.hasOwnProperty("type")) {
+                    if (dialogNode.type === "all") {
+                        for (let i of dialogNode.content) {
+                            getDialog(i);
+                        }
+                    }
+                    if (dialogNode.type === "random") {
+                        getDialog(dialogNode.content[Math.floor(Math.random() * dialogNode.content.length)]);
+                    }
+                }
+            }
         }
         analyze(arguments[0]);
         if (target === false) {
@@ -432,7 +438,7 @@ let commandsList = {
         }
         if (gamedata.npcInteractions[target].talk.hasOwnProperty(dialog)) {
             // 打印对话
-            characterSpeak(gamedata.npc[target], getDialog(gamedata.npcInteractions[target].talk, dialog));
+            getDialog(gamedata.npcInteractions[target].talk[dialog]);
             return true;
         } else {
             // 该NPC没有指定的对话选项
