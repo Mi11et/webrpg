@@ -242,12 +242,12 @@ let commandsList = {
                     if (range[i].hasOwnProperty("carriable") && range[i].carriable === true) {
                         waitForRounds("get");
                         gamedata.player.items.push(range[i]);
-                        pt("你拿起了" + describeItem(range[i], 0) + "。");
+                        pt("你拿起了" + describeItem(range[i], -1) + "。");
                         range.splice(i, 1); // 从场景中删去对应物品
                         return true;
                     } else {
                         // 玩家指定的物品不可携带
-                        pt("你拿不起" + describeItem(range[i], 0) + "。");
+                        pt("你拿不起" + describeItem(range[i], -1) + "。");
                         return false;
                     }
                 }
@@ -284,7 +284,7 @@ let commandsList = {
                 }
                 waitForRounds("eat");
                 gamedata.player.hunger += i.nutrition;
-                pt("你吃掉了" + describeItem(i, 0));
+                pt("你吃掉了" + describeItem(i, -1));
                 // 从玩家物品栏中删去目标
                 range.splice(i, 1);
                 return true;

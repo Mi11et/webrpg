@@ -161,7 +161,7 @@ let gamedata = {
 
     "events" : [
         {
-            "requirement" : "$gamedata.global.time === 300",
+            "requirement" : "$#time === 300",
             "event" : () => {
                 for (let i of gamedata.map["firstTown_hotel_corridor"].items) {
                     if (i.id === "shelf" && countItem(i, { "id" : "bread" }) <= 4) {
@@ -373,7 +373,7 @@ let gamedata = {
                         },
                         {
                             "type" : "all",
-                            "requirement" : "$(time >= 720 && time < 780) || (time >= 1080 && time < 1140)",
+                            "requirement" : "$(#time >= 720 && #time < 780) || (#time >= 1080 && #time < 1140)",
                             "content" : [
                                 "已经到了吃饭时间，可以请你把这个三明治带给我丈夫吗？他就在旅店的前台。",
                                 "$playerAddTask(\"firstTown_hotel-food_delivery\")"

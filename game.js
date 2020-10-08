@@ -2,7 +2,7 @@ function checkTasks(playerAction) {
     // 检查角色的一个动作是否满足一个任务的达成条件
     let checkRequirement = (task) => {
         // 判断是否满足任务的达成条件
-        if (task.requirement[0] === '$') return eval(task.requirement.substring(1));
+        if (task.requirement[0] === '$') return eval(parseScript(task.requirement));
         else return playerAction === task.requirement;
     }
     let playerTasks = gamedata.player.tasks;
@@ -342,7 +342,7 @@ function getTime(character) {
 
 function readContent(itemToRead) {
     let textList = gamedata.content[itemToRead.content];
-    let formattedContent = describeItem(itemToRead, 0) + "中如此写着：";
+    let formattedContent = describeItem(itemToRead, -1) + "中如此写着：";
     for (let i of textList) {
         if (i[0] == '#') {
             // 以 # 开头为标题
@@ -352,7 +352,7 @@ function readContent(itemToRead) {
             formattedContent += '\n' + indent("——" + i.substring(1), "8###");
         } else if (i[0] == '$') {
             // 以 $ 开头为阅读文件后执行的命令
-            eval(i.substring(1));
+            eval(parseScript(i));
         } else {
             formattedContent += '\n' + indent(i, "4###");
         }
@@ -415,7 +415,7 @@ function checkEvents() {
             }
         }
         if (typeof i.requirement === "string") {
-            if (i.requirement[0] === "$" && eval(i.requirement.substring(1))) {
+            if (i.requirement[0] === "$" && eval(parseScript(i.requirement))) {
                 // 满足事件发生条件
                 if (i.hasOwnProperty("event")) {
                     i.event();
@@ -458,9 +458,15 @@ function parseScript(script) {
         str = str.replaceAll(keyword, replacement);
         return str;
     }
-    if (script[0] === "$") {
+    let transTable = {
+        "#time" : "gamedata.global.time",
+        "#playerLocation" : "gamedata.player.location"
+    }
+    if (script[0] === "$") { 
         script = script.substring(1);
     }
-    script = replace(script, "time", "gamedata.global.time");
+    for (let i in transTable) {
+        script = replace(script, i, transTable[i]);
+    }
     return script;
 }
