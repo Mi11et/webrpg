@@ -144,20 +144,21 @@ function playerEndMoving() {
     return;
 }
 
+function playerMoveNear(dest) {
+    if (gamedata.map[gamedata.player.location].near.hasOwnProperty(dest)) {
+        playerMove(gamedata.map[gamedata.player.location].near[dest]);
+        nextRound();
+    } else {
+        pterr("那边无路可走。");
+    }
+    // 自动滚动
+    document.getElementById("output").scrollTop = 
+        document.getElementById("output").scrollHeight;
+    return;
+}
+
 function onReturn() {
     // 移动模式
-    let moveNear = function(dest) {
-        if (gamedata.map[gamedata.player.location].near.hasOwnProperty(dest)) {
-            playerMove(gamedata.map[gamedata.player.location].near[dest]);
-            nextRound();
-        } else {
-            pterr("那边无路可走。");
-        }
-        // 自动滚动
-        document.getElementById("output").scrollTop = 
-            document.getElementById("output").scrollHeight;
-        return;
-    }
     if (gamedata.player.status.moving) {
         event.preventDefault();
         if (event.repeat === true) {
@@ -166,16 +167,16 @@ function onReturn() {
         }
         switch (event.keyCode) {
             case 87: {
-                moveNear("up"); break; // w
+                playerMoveNear("up"); break; // w
             }
             case 65: {
-                moveNear("left"); break; // a
+                playerMoveNear("left"); break; // a
             }
             case 83: {
-                moveNear("down"); break; // s
+                playerMoveNear("down"); break; // s
             }
             case 68: {
-                moveNear("right"); break; // d
+                playerMoveNear("right"); break; // d
             }
             case 77: {
                 playerEndMoving(); break; // m

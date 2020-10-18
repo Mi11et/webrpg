@@ -213,10 +213,31 @@ let commandsList = {
     },
     "move" : function() {
         // move/m
+        if (/Mobi/.test(navigator.userAgent)) {
+            // 当前处于移动端
+            pterr("当前处于移动端，move命令已禁用，输入w/a/s/d来移动。");
+            return false;
+        }
         playerStartMoving();
         return true;
     },
     "m" : "move",
+    "w" : function (){
+        // w
+        return playerMoveNear('up');
+    },
+    "a" : function (){
+        // a
+        return playerMoveNear('left');
+    },
+    "s" : function (){
+        // s
+        return playerMoveNear('down');
+    },
+    "d" : function (){
+        // d
+        return playerMoveNear('right');
+    },
     "say" : function() {
         // say ...
         let target = "";
