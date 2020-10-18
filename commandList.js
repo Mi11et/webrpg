@@ -94,21 +94,82 @@ let commandsList = {
         }
     },
     "task" : function() {
-        // task
+        // task ( accept/reject ... )
         // 查看玩家任务
-        if (arguments[0].length > 0) {
-            pterr("参数过多。");
-            return false;
-        }
-        pt("=== 任务列表 ===============");
-        if (gamedata.player.tasks.length === 0) {
-            pt(indent("你现在没有要做的事。", "4###"));
-        } else {
-            for (let i of gamedata.player.tasks) {
-                pt(indent('【' + i.name + '】' + i.detail, "4###"));
+        let acceptedTasks = [], acceptableTasks = [];
+        // 将玩家任务分成已接受和未接受
+        for (let i of gamedata.player.tasks) {
+            if (i.hasOwnProperty("acceptRequirement")) {
+                // 可接受的任务
+                acceptableTasks.push(i);
+            } else {
+                // 已经接受的任务
+                acceptedTasks.push(i);
             }
         }
-        return true;
+        if (arguments[0].length === 0) {
+            pt("=== 任务列表 ===============");
+            if (acceptedTasks.length === 0) {
+                pt(indent("你现在没有要做的事。", "4###"));
+            } else {
+                for (let i in acceptedTasks) {
+                    let task = acceptedTasks[i];
+                    pt(indent((parseInt(i) + 1).toString(), "4##2#") + indent('【' + task.name + '】' + task.detail, "1###"));
+                }
+            }
+            if (acceptableTasks.length != 0) {
+                pt();
+                pt("=== 可接受的任务 ===============");
+                for (let i in acceptableTasks) {
+                    let task = acceptableTasks[i];
+                    pt(indent((parseInt(i) + 1).toString(), "4##2#") + indent('【' + task.name + '】' + task.detail, "1###"));
+                }
+            }
+            return true;
+        }
+        if (arguments[0][0] === "accept") {
+            // 接受任务
+            targetId = arguments[0][1];
+            if (/^[1-9]\d*$/.test(targetId)) {
+                targetId = parseInt(targetId);
+                if (targetId > acceptableTasks.length) {
+                    // 输入的编号过大
+                    pterr("你要接受哪一个任务？");
+                    return false;
+                }
+                targetId -= 1; // 转换成下标
+                let targetTask = acceptableTasks.splice(targetId, 1)[0];
+                delete targetTask.acceptRequirement // 删除acceptRequirement属性
+                acceptedTasks.push(targetTask);
+                pt("你接受了任务【" + targetTask.name + "】。");
+                let newTaskList = acceptableTasks.concat(acceptedTasks);
+                gamedata.player.tasks = newTaskList;
+            } else {
+                // 输入的编号不是正整数
+                pterr("你要接受哪一个任务？");
+                return false;
+            }
+        }
+        if (arguments[0][0] === "reject") {
+            // 拒绝任务
+            targetId = arguments[0][1];
+            if (/^[1-9]\d*$/.test(targetId)) {
+                targetId = parseInt(targetId);
+                if (targetId > acceptableTasks.length) {
+                    // 输入的编号过大
+                    pterr("你要拒绝哪一个任务？");
+                    return false;
+                }
+                targetId -= 1; // 转换成下标
+                let targetTask = acceptableTasks.splice(targetId, 1)[0];
+                pt("你拒绝了任务【" + targetTask.name + "】。");
+                let newTaskList = acceptableTasks.concat(acceptedTasks);
+                gamedata.player.tasks = newTaskList;
+            } else {
+                // 输入的编号不是正整数
+                pterr("你要拒绝哪一个任务？");
+            }
+        }
     },
     "whoami" :　function() {
         // whoami
@@ -151,7 +212,7 @@ let commandsList = {
         return false;
     },
     "move" : function() {
-        // move / m
+        // move/m
         playerStartMoving();
         return true;
     },
@@ -295,7 +356,7 @@ let commandsList = {
         return false;
     },
     "start" : function() {
-        // start new / ...
+        // start new/...
         // 以某个存档/新存档开始游戏
         let toggleCommandLimit = () => {
             // 切换可用的命令

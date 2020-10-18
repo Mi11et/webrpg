@@ -151,6 +151,10 @@ let gamedata = {
         "firstTown_hotel-food_delivery" : {
             "name" : "给老板带饭",
             "detail" : "把老板娘给的三明治带给老板。",
+            "acceptRequirement" : [
+                "$#location === \"firstTown_hotel_dining_room\"",
+                "$(#time >= 720 && #time < 780) || (#time >= 1080 && #time < 1140)"
+            ],
             "location" : "firstTown_hotel_lobby",
             "requirement" : "give sandwich to boss",
             "reward" : {
