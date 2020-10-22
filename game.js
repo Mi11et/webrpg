@@ -84,6 +84,7 @@ function gameMainMenu() {
     // 显示主界面
     pt(gameTitleBig);
     pt("这是一个命令行冒险游戏，名字还没想好。应该会尽量中二一点。");
+    pt();
     pt("输入 start new 创建新存档。");
     pt("输入 savelist 列出所有存档。");
     pt("输入 start <存档名> 载入某一存档。");
@@ -175,21 +176,27 @@ function startTutorial() {
 function describeLocation() {
     // 描述玩家所在的地点
     let locationName = "";
+    let nowLocation = gamedata.map[gamedata.player.location];
     // 获取地点名称
-    if (gamedata.player.knownLocation.includes(gamedata.map[gamedata.player.location].id)) {
-        locationName = gamedata.map[gamedata.player.location].name;
+    if (gamedata.player.knownLocation.includes(nowLocation.id)) {
+        locationName = nowLocation.name;
     } else {
         locationName = "陌生的地方";
     }
     pt("这里是" + locationName + "。");
-    pt(gamedata.map[gamedata.player.location].detail);
+    pt();
+    if (nowLocation.hasOwnProperty("detail")) {
+        pt(nowLocation.detail);
+        pt();
+    }
     // 描述场景内的物品
-    if (gamedata.map[gamedata.player.location].hasOwnProperty("items")
-        && gamedata.map[gamedata.player.location].items.length !== 0) {
+    if (nowLocation.hasOwnProperty("items")
+        && nowLocation.items.length !== 0) {
         pt("这里有：");
-        for (let i in gamedata.map[gamedata.player.location].items) {
-            pt(indent(describeItem(gamedata.map[gamedata.player.location].items[i], 0), "4###"));
+        for (let i in nowLocation.items) {
+            pt(indent(describeItem(nowLocation.items[i], 0), "4###"));
         }
+        pt();
     }
     // 描述当前的时间
     let currentTime = getTime(gamedata.player);
@@ -220,6 +227,7 @@ function describeLocation() {
             }
         }
     }
+    pt();
     // 打印地图
     printMap();
 }
@@ -454,8 +462,11 @@ function parseScript(script) {
     // 将一段形如"$..."的字符串转换为合法的js语句
     let replace = (str, keyword, replacement) => {
         // 代替replaceAll
-        str = str.replaceAll(replacement, keyword);
-        str = str.replaceAll(keyword, replacement);
+        let matchAll = (str) => {
+            return new RegExp(str, "g");
+        }
+        str = str.replace(matchAll(replacement), keyword);
+        str = str.replace(matchAll(keyword), replacement);
         return str;
     }
     let transTable = {

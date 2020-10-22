@@ -51,6 +51,7 @@ let commandsList = {
         if (arguments[0].length === 0) {
             // 观察周围
             pt("你看了看周围。");
+            pt();
             describeLocation();
             return true;
         } else {
@@ -138,6 +139,14 @@ let commandsList = {
                     return false;
                 }
                 targetId -= 1; // 转换成下标
+                // 判断玩家是否满足接受任务的要求
+                for (let i of acceptableTasks[targetId].acceptRequirement) {
+                    if (eval(parseScript(i)) === false) {
+                        pt("你目前无法接受该任务。");
+                        return false;
+                    }
+                }
+                // 从未接受列表中删除此任务
                 let targetTask = acceptableTasks.splice(targetId, 1)[0];
                 delete targetTask.acceptRequirement // 删除acceptRequirement属性
                 acceptedTasks.push(targetTask);
