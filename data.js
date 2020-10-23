@@ -348,10 +348,23 @@ let gamedata = {
                 },
                 "default" : "@hotel",
                 "meal" : {
-                    "type" : "random",
+                    "type" : "all",
                     "content" : [
-                        "这边的饭菜怎么样？今天可是我掌勺！",
-                        "我年轻的时候在王都的一间面包店做过厨师，在这镇上没有人比我更懂面包了！"
+                        {
+                            "type" : "random",
+                            "content" : [
+                                "这边的饭菜怎么样？今天可是我掌勺！",
+                                "我年轻的时候在王都的一间面包店做过厨师，在这镇上没有人比我更懂面包了！"
+                            ]
+                        },
+                        {
+                            "type" : "all",
+                            "requirement" : "$(#time >= 720 && #time < 780) || (#time >= 1080 && #time < 1140)",
+                            "content" : [
+                                "我肚子有点饿了，但我有点忙，脱不开身。你能帮我从餐厅带一个三明治过来吗？",
+                                "$playerAddTask(\"firstTown_hotel-food_delivery\")"
+                            ]
+                        }
                     ]
                 },
                 "me" : {
