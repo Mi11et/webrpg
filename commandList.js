@@ -414,7 +414,9 @@ let commandsList = {
             return false;
         }
         // 读取存档数据
-        loadData(arguments[0][0]);
+        if (!loadData(arguments[0][0])) {
+            pterr("存档载入失败。");
+        }
         clearTextArea();
         toggleCommandLimit();
         describeLocation();
@@ -430,6 +432,10 @@ let commandsList = {
                 pterr("存档名称只能为一个英文单词。");
                 return false;
             }
+            if (arguments[0][0] === "new") {
+                pterr("存档名称不能为new。");
+                return false;
+            }
             gamedata.global.currentSaveName = arguments[0][0];
             saveData(arguments[0][0]);
             pt("存档", gamedata.global.currentSaveName, "已保存。");
@@ -443,6 +449,10 @@ let commandsList = {
                 return true;
             } else if (arguments[0].length === 1) {
                 // 保存到新存档
+                if (arguments[0][0] === "new") {
+                    pterr("存档名称不能为new。");
+                    return false;
+                }
                 gamedata.global.currentSaveName = arguments[0][0];
                 saveData(arguments[0][0]);
                 pt("存档", gamedata.global.currentSaveName, "已保存。");
@@ -457,7 +467,7 @@ let commandsList = {
     "delete" : function() {
         // delete ...
         if (arguments[0].length != 1 
-            || !localStorage.hasOwnProperty(arguments[0][0])) {
+            || (!localStorage.hasOwnProperty(arguments[0][0]) || arguments[0][0] === "new")) {
             // 存档名不规范或指定的存档不存在
             pterr("你要删除哪一个存档？");
             return false;
@@ -550,6 +560,13 @@ let commandsList = {
         pt(indent("----", "2##4#") + indent("----------------", "4##16#"));
         for (let i = 0; i < localStorage.length; i++) {
             let saveName = localStorage.key(i);
+            if (!localStorage[localStorage.key(i)].hasOwnProperty("signature") 
+                || localStorage[localStorage.key(i)].signature !== gameSaveDataSignature) {
+                continue;
+            }
+            if (saveName === "new") {
+                continue;
+            }
             pt(indent((i + 1).toString(), "2##4#") + indent(saveName, "4##16#"));
         }
         return true;

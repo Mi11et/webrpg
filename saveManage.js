@@ -11,6 +11,10 @@ function loadData(dataname) {
     let dataStr = localStorage.getItem(dataname);
     if (dataStr === null) return false;
     let saveData = JSON.parse(dataStr);
+    if (!saveData.hasOwnProperty("signature") || saveData.signature != gameSaveDataSignature) {
+        return false;
+    }
+    saveData = saveData["data"];
     for (let rule of ruleList) {
         rule += '.';
         mergeByRule(gamedata, saveData, rule);
@@ -62,6 +66,10 @@ function saveData(dataname) {
     for (let rule of ruleList) {
         rule += '.';
         mergeByRule(saveData, gamedata, rule);
+    }
+    saveData = {
+        "signature" : gameSaveDataSignature,
+        "data" : saveData
     }
     let dataStr = JSON.stringify(saveData);
     localStorage.setItem(dataname, dataStr);
