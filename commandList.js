@@ -153,6 +153,12 @@ let commandsList = {
                 pt("你接受了任务【" + targetTask.name + "】。");
                 let newTaskList = acceptableTasks.concat(acceptedTasks);
                 gamedata.player.tasks = newTaskList;
+                if (targetTask.hasOwnProperty("additional")) {
+                    for (let i of targetTask.additional) {
+                        playerAddTask(i, targetTask.name);
+                    }
+                }
+                // 接受附加任务
             } else {
                 // 输入的编号不是正整数
                 pterr("你要接受哪一个任务？");
