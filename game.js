@@ -142,25 +142,32 @@ function playerMove(dest, recognize = true) {
 
 function playerAddTask(taskName, from = null) {
     // 给玩家增加一项任务
-    // from 表示该任务是某个任务的附加任务
+    // from 表示该任务所属于的父级任务的名称
     if (gamedata.tasks.hasOwnProperty(taskName) === false) {
         console.warn("任务" + taskName + "不存在。");
         return;
     }
-    gamedata.player.tasks.push(gamedata.tasks[taskName]);
-    if (gamedata.tasks[taskName].hasOwnProperty("dialogueWhenAccept")) {
+    let taskToAdd = gamedata.tasks[taskName];
+    gamedata.player.tasks.push(taskToAdd);
+    if (taskToAdd.hasOwnProperty("dialogueWhenAccept")) {
         // 接受任务时的对话
-        characterSpeak("me", gamedata.tasks[taskName].dialogueWhenAccept);
+        characterSpeak("me", taskToAdd.dialogueWhenAccept);
     }
     if (from === null) {
-        pt("新的任务【" + gamedata.tasks[taskName].name + "】已追加。");
+        // 该任务不属于任何任务的附加任务
+        if (taskToAdd.hasOwnProperty("acceptRequirement")) {
+            pt("可选任务【" + taskToAdd.name + "】已追加。");
+        } else {
+            pt("新的任务【" + taskToAdd.name + "】已追加。");
+        }
     } else {
-        pt("【" + gamedata.tasks[from].name + "】的附加任务【" + gamedata.tasks[taskName].name + "】已追加。");
+        // 该任务属于附加任务
+        pt("【" + from + "】的附加任务【" + taskToAdd.name + "】已追加。");
     }
-    if (gamedata.tasks[taskName].hasOwnProperty("additional")) {
+    if (taskToAdd.hasOwnProperty("additional")) {
         // 接受附加任务
-        for (let i of gamedata.tasks[taskName].additional) {
-            playerAddTask(i, taskName);
+        for (let i of taskToAdd.additional) {
+            playerAddTask(i, taskToAdd.name);
         }
     }
     return;
