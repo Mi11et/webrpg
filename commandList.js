@@ -556,18 +556,27 @@ let commandsList = {
     "savelist" : function() {
         // savelist
         pt("本地存档列表：");
-        pt(indent("编号", "2##4#") + indent("存档名", "4##16#"));
-        pt(indent("----", "2##4#") + indent("----------------", "4##16#"));
+        let buf = [];
         for (let i = 0; i < localStorage.length; i++) {
             let saveName = localStorage.key(i);
-            if (!localStorage[localStorage.key(i)].hasOwnProperty("signature") 
-                || localStorage[localStorage.key(i)].signature !== gameSaveDataSignature) {
+            let saveObj = JSON.parse(localStorage[localStorage.key(i)]);
+            if (!saveObj.hasOwnProperty("signature") 
+                || saveObj.signature !== gameSaveDataSignature) {
                 continue;
             }
             if (saveName === "new") {
                 continue;
             }
-            pt(indent((i + 1).toString(), "2##4#") + indent(saveName, "4##16#"));
+            buf.push(saveName);
+        }
+        if (buf.length === 0) {
+            pt(indent("无本地存档。", "2###"));
+        } else {
+            pt(indent("编号", "2##4#") + indent("存档名", "4##16#"));
+            pt(indent("----", "2##4#") + indent("----------------", "4##16#"));
+            for (let i in buf) {
+                pt(indent((parseInt(i) + 1).toString(), "2##4#") + indent(buf[i], "4##16#"));
+            }
         }
         return true;
     },
