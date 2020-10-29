@@ -404,6 +404,8 @@ let commandsList = {
             clearTextArea();
             toggleCommandLimit();
             // 存档数据初始化
+            loadData("new");
+            gamedata.global.currentSaveName = ""
             startTutorial();
             return true;
         }
@@ -427,7 +429,12 @@ let commandsList = {
         // 把游戏状态保存到新存档或当前存档
         if (gamedata.global.currentSaveName === "") {
             // 正在使用一个新存档，玩家需指定一个存档名
-            if (arguments[0].length != 1) {
+            if (arguments[0].length === 0) {
+                // 未输入存档名
+                pterr("存档的名字是？");
+                return false;
+            }
+            if (arguments[0].length > 1) {
                 // 存档名不规范
                 pterr("存档名称只能为一个英文单词。");
                 return false;

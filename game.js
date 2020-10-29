@@ -76,6 +76,7 @@ function playerRecognize() {
 
 function gameInit() {
     // 暂时没有用
+    generateEmptySaveData();
     gameMainMenu();
     return;
 }
@@ -322,6 +323,11 @@ function describeItem(item, type) {
         }
     }
     return res;
+}
+
+function generateEmptySaveData() {
+    saveData("new");
+    return;
 }
 
 function getTime(character) {
