@@ -149,10 +149,18 @@ function playerAddTask(taskName, from = null) {
         return;
     }
     let taskToAdd = gamedata.tasks[taskName];
+    if (countItem(gamedata.player.tasks, { "name" : taskToAdd.name })) {
+        pt("任务【" + taskToAdd.name + "】已经存在。");
+        return;
+    }
     gamedata.player.tasks.push(taskToAdd);
     if (taskToAdd.hasOwnProperty("dialogueWhenAccept")) {
         // 接受任务时的对话
         characterSpeak("me", taskToAdd.dialogueWhenAccept);
+    }
+    if (taskToAdd.hasOwnProperty("acceptEvent") && !taskToAdd.hasOwnProperty("acceptRequirement")) {
+        // 接受任务时发生事件
+        taskToAdd.acceptEvent();
     }
     if (from === null) {
         // 该任务不属于任何任务的附加任务
@@ -450,16 +458,13 @@ function checkEvents() {
 
 function countItem(range, targetAttr) {
     // 在range中寻找满足targetAttr的物品，返回个数
-    if (!range.hasOwnProperty("items")) {
-        // 若range无items属性，返回0
-        return 0;
-    }
     let cnt = 0; // 满足条件的物品数量
-    for (let i of range.items) {
+    for (let i of range) {
         let flag = true;
         for (let j in targetAttr) {
             // 对于range中的每一个物品，检查targetAttr的每一个参数
-            if (!i.hasOwnProperty(j) || i.j !== targetAttr.j) {
+            console.log(j, i[j], targetAttr[j]);
+            if (!i.hasOwnProperty(j) || i[j] !== targetAttr[j]) {
                 flag = false;
                 break;
             }

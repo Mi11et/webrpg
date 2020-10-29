@@ -155,6 +155,14 @@ let gamedata = {
                 "$#playerLocation === \"firstTown_hotel_dining_room\"",
                 "$(#time >= 720 && #time < 780) || (#time >= 1080 && #time < 1140)"
             ],
+            "acceptEvent" : () => {
+                addItem(gamedata.player, {
+                    "id" : "sandwich",
+                    "carriable" : true,
+                    "nutrition" : 50
+                });
+                pt("老板娘给了你一个三明治。");
+            },
             "location" : "firstTown_hotel_lobby",
             "requirement" : "give sandwich to boss",
             "reward" : {
@@ -168,7 +176,7 @@ let gamedata = {
             "requirement" : "$#time === 300",
             "event" : () => {
                 for (let i of gamedata.map["firstTown_hotel_corridor"].items) {
-                    if (i.id === "shelf" && countItem(i, { "id" : "bread" }) <= 4) {
+                    if (i.id === "shelf" && countItem(i.items, { "id" : "bread" }) <= 4) {
                         addItem(i, {
                             "id" : "bread",
                             "carriable" : true,
@@ -222,7 +230,8 @@ let gamedata = {
         "bread" : "面包",
         "shelf" : "架",
         "clock" : "钟",
-        "list" : "表格"
+        "list" : "表格",
+        "sandwich" : "三明治"
     },
 
     "helpText" : {
