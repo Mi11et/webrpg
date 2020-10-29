@@ -672,6 +672,66 @@ let commandsList = {
         // NPC不卖该物品
         pt("这个人没有", target, "。");
         return false;
+    },
+    "give" : function() {
+        // give ... to ...
+        let target = "", itemToGive = "", targetFlag = false;
+        let seekNPC = (NPCName) => {
+            for (let i in gamedata.npc) {
+                if (gamedata.npc[i].id === NPCName 
+                    && gamedata.npc[i].location === gamedata.player.location) {
+                    return gamedata.npc[i];
+                }
+            }
+            return false;
+        }
+        // 切分命令
+        for (let i = 0; i < arguments[0].length; ++i) {
+            if (arguments[0][i] === "to") {
+                targetFlag = true;
+                continue;
+            }
+            if (targetFlag) {
+                target += " " + arguments[0][i];
+            } else {
+                itemToGive += " " + arguments[0][i];
+            }
+        }
+        // 判断输入的命令是否符合语法
+        if (!targetFlag || target === "") {
+            pterr("你要把东西给谁？");
+            return false;
+        }
+        if (itemToGive === "") {
+            pterr("你要给什么东西？");
+            return false;
+        }
+        // 删除多余空格
+        target = target.substring(1);
+        itemToGive = itemToGive.substring(1);
+        target = seekNPC(target);
+        if (target == false) {
+            // 玩家指定的NPC不存在
+            pterr("你要把东西给谁？");
+            return false;
+        }
+        let flagHaveItem = false;
+        for (let i in gamedata.player.items) {
+            let item = gamedata.player.items[i];
+            if (item.id != itemToGive) {
+                continue;
+            } else {
+                addItem(target, item);
+                flagHaveItem = true;
+                pt("你把" + describeItem(item, -1) + "给了" + target.name + "。");
+                gamedata.player.items.splice(i, 1);
+            }
+        }
+        if (!flagHaveItem) {
+            pterr("你没有 " + itemToGive + " 。");
+            return false;
+        }
+        return true;
     }
 }
 
