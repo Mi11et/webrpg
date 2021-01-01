@@ -46,7 +46,7 @@ let commandsList = {
     },
     "look" : function() {
         // look ( ... )
-        // 观察周围或观察某一个物品
+        // 观察周围或观察某一个对象
         waitForRounds("look");
         if (arguments[0].length === 0) {
             // 观察周围
@@ -55,14 +55,14 @@ let commandsList = {
             describeLocation();
             return true;
         } else {
-            // 观察某个物品
+            // 观察某个对象
             let target = "";
             for (let i of arguments[0]) {
                 target += " " + i;
             }
             target = target.substring(1);
             let range = {};
-            // 从当前场景和玩家物品栏中搜索指定物品
+            // 从当前场景和玩家对象栏中搜索指定对象
             Object.assign(range, gamedata.player.items, gamedata.map[gamedata.player.location].items);
             for (let i in range) {
                 if (range[i].id === target) {
@@ -70,7 +70,20 @@ let commandsList = {
                     return true;
                 }
             }
-            // 没有找到指定的物品
+            // 搜索NPC
+            for (let i in gamedata.npc) {
+                if (gamedata.npc[i].id === target
+                    && gamedata.npc[i].location === gamedata.player.location) {
+                    pt(gamedata.npc[i].detail);
+                    return true;
+                }
+            }
+            // 观察自己
+            if (target === "me") {
+                pt(gamedata.player.detail)
+                return true;
+            }
+            // 没有找到指定的对象
             pt("这里没有", target, "。");
             return false;
         }

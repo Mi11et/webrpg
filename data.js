@@ -309,6 +309,7 @@ let gamedata = {
 
     "player" : {
         "name" : "",
+        "detail" : "这是你自己。",
         "location" : {},
         "items" : [],
         "tasks" : [],
@@ -325,6 +326,7 @@ let gamedata = {
         "10001" : {
             "id" : "boss",
             "name" : "旅店老板",
+            "detail" : "这个人是旅店的老板。",
             "location" : "firstTown_hotel_lobby",
             "items" : [],
             "health" : 100
@@ -332,6 +334,7 @@ let gamedata = {
         "10002" : {
             "id" : "hostress",
             "name" : "旅店女主人",
+            "detail" : "这个人是旅店的女主人。",
             "location" : "firstTown_hotel_dining_room",
             "items" : [],
             "health" : 100
