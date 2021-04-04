@@ -84,6 +84,7 @@ function getCommand(inputString) {
     // 接收到命令之后的处理
 
     // 分割命令
+    inputString = inputString.replace('\n', '');
     let command = inputString.split(' ');
     let emptyElement = [];
     for (let i in command) {
