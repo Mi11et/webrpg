@@ -2,6 +2,8 @@ window.onload = function() {
     // 初始化
     clearTextArea();
     gameInit();
+    document.getElementById("input").readOnly = "";
+    document.getElementById("input").addEventListener("keydown", onKeyDown);
     return;
 }
 
@@ -60,6 +62,10 @@ function pt() {
     }
     put('\n');
     document.getElementById("output").value += outBuf;
+
+    // 自动滚动
+    document.getElementById("output").scrollTop = 
+        document.getElementById("output").scrollHeight;
     return;
 }
 
@@ -77,6 +83,10 @@ function pterr() {
     };
     put('\n');
     document.getElementById("output").value += outBuf;
+    
+    // 自动滚动
+    document.getElementById("output").scrollTop = 
+        document.getElementById("output").scrollHeight;
     return;
 }
 
@@ -157,7 +167,7 @@ function playerMoveNear(dest) {
     return;
 }
 
-function onReturn() {
+function onKeyDown(event) {
     // 移动模式
     if (gamedata.player.status.moving) {
         event.preventDefault();
