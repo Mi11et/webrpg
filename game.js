@@ -65,7 +65,7 @@ function playerRecognize() {
     // 默认情况下，主动移动到某一个地点会让玩家自动认识这个地点
     // 当玩家（由于剧情或者别的原因）被带到某一个地方，
     // 需要寻找线索来认识这个地方的时候才要用到这个方法
-    for (let i = 0; i < arguments.length; ++i) {
+    for (let i = 0; i < arguments.length; i++) {
         if (gamedata.map.hasOwnProperty(arguments[i])
             && !gamedata.player.knownLocation.includes(arguments[i])) {
             gamedata.player.knownLocation.push(arguments[i]);
@@ -412,7 +412,7 @@ function waitForRounds(command) {
     if (gamedata.needTime.hasOwnProperty(command)) {
         rounds = gamedata.needTime[command];
     }
-    for (let i = 0; i < rounds; ++i) {
+    for (let i = 0; i < rounds; i++) {
         nextRound();
         if (rounds > 1 && tempdata.player.interrupted === true) {
             return false;

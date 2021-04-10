@@ -290,7 +290,7 @@ let commandsList = {
         // get ... ( from ... )
         let target = "", source = "", sourceFlag = false;
         // 切分命令
-        for (let i = 0; i < arguments[0].length; ++i) {
+        for (let i = 0; i < arguments[0].length; i++) {
             if (arguments[0][i] === "from") {
                 sourceFlag = true;
                 continue;
@@ -622,7 +622,7 @@ let commandsList = {
             return false;
         }
         // 切分命令
-        for (let i = 0; i < arguments[0].length; ++i) {
+        for (let i = 0; i < arguments[0].length; i++) {
             if (arguments[0][i] === "from") {
                 sourceFlag = true;
                 continue;
@@ -699,7 +699,7 @@ let commandsList = {
             return false;
         }
         // 切分命令
-        for (let i = 0; i < arguments[0].length; ++i) {
+        for (let i = 0; i < arguments[0].length; i++) {
             if (arguments[0][i] === "to") {
                 targetFlag = true;
                 continue;
