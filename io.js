@@ -20,9 +20,11 @@ function indent(targetString, formatString) {
     // 缩进方法的格式为：左侧空格数 + L/R + 期望长度 + 右侧空格数，用 # 分隔
     // 左/右侧空格数默认为 0 ，缩进方法默认为左对齐（L），期望长度默认为字符串长度
     let getLength = (str) => {
+        // 将汉字按两个字符计算长度
         return str.replace(/[\u4e00-\u9fff]/g, "__").length;
     }
     let tab = (spaceLength) => {
+        // 返回一定长度的空格
         if (spaceLength <= 0) return "";
         let res = "";
         for (let spaceCnt = 0; spaceCnt < spaceLength; spaceCnt++) {
@@ -33,16 +35,24 @@ function indent(targetString, formatString) {
     let resultString = "";
     let len = getLength(targetString);
     let format = formatString.split('#');
-    if (format.length > 4) return;
+    if (format.length > 4) {
+        console.error("该format不符合标准，已停止执行：" + formatString);
+        return;
+    }
     for (let i in format) {
         if (format[i] === '' && i != 1) {
+            // 除了缩进方法（L/R）外，其他参数如未设定，赋默认值0
             format[i] = 0;
         }
     }
     resultString += tab(parseInt(format[0])); // 左侧空格
     let diff = tab(parseInt(format[2]) - len);
-    if (format[1] === 'L' || format[1] === '') resultString += targetString + diff; // 左对齐
-    if (format[1] === 'R') resultString += diff + targetString; // 右对齐
+    if (format[1] === 'L' || format[1] === '') {
+        resultString += targetString + diff; // 左对齐
+    }
+    if (format[1] === 'R') {
+        resultString += diff + targetString; // 右对齐
+    }
     resultString += tab(parseInt(format[3])); // 右侧空格
     return resultString;
 }

@@ -346,6 +346,7 @@ function describeItem(item, type) {
 }
 
 function generateEmptySaveData() {
+    // 游戏开始时，趁初始数据未被玩家覆盖，提前保留一份空白的数据
     saveData("new");
     return;
 }
@@ -395,6 +396,7 @@ function readContent(itemToRead) {
             // 以 $ 开头为阅读文件后执行的命令
             eval(parseScript(i));
         } else {
+            // 正文
             formattedContent += '\n' + indent(i, "4###");
         }
     }
@@ -475,7 +477,6 @@ function countItem(range, targetAttr) {
         let flag = true;
         for (let j in targetAttr) {
             // 对于range中的每一个物品，检查targetAttr的每一个参数
-            console.log(j, i[j], targetAttr[j]);
             if (!i.hasOwnProperty(j) || i[j] !== targetAttr[j]) {
                 flag = false;
                 break;
@@ -490,6 +491,7 @@ function countItem(range, targetAttr) {
 
 function parseScript(script) {
     // 将一段形如"$..."的字符串转换为合法的js语句
+    // 会展开一些缩写，具体见下面的transTable
     let replace = (str, keyword, replacement) => {
         // 代替replaceAll
         let matchAll = (str) => {
@@ -505,6 +507,8 @@ function parseScript(script) {
     }
     if (script[0] === "$") { 
         script = script.substring(1);
+    } else {
+        console.warn("该语句不以\'$\'开头：" + script);
     }
     for (let i in transTable) {
         script = replace(script, i, transTable[i]);

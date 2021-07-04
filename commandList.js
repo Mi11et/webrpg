@@ -20,7 +20,10 @@ let commandsList = {
                 return;
             }
             for (let i in commandsList) {
-                if (typeof commandsList[i] === "string") continue;
+                if (typeof commandsList[i] === "string") {
+                    // 该命令是另一命令的别名/缩写
+                    continue;
+                }
                 outputBuf.push(i);
                 if (outputBuf.length === 4) {
                     printBuf();
@@ -108,7 +111,7 @@ let commandsList = {
         }
     },
     "task" : function() {
-        // task ( accept/reject ... )
+        // task（accept/reject ...）
         // 查看玩家任务
         let acceptedTasks = [], acceptableTasks = [];
         // 将玩家任务分成已接受和未接受
