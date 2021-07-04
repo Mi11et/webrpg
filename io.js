@@ -233,6 +233,10 @@ function onKeyDown(event) {
         }
         inputHistory.focus = -1; // 指针归零
 
+        // 打印分割线
+        pt("================================");
+        pt();
+
         // 传递命令
         getCommand(inputString);
         return;

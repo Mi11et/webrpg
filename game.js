@@ -244,6 +244,18 @@ function describeLocation() {
         }
     }
     pt();
+    // 描述场景内的 NPC
+    let npcExist = false;
+    for (let i in gamedata.npc) {
+        if (gamedata.npc[i].location === nowLocation.id) {
+            if (npcExist === false) {
+                npcExist = true;
+                pt("这里有：");
+            }
+            pt(indent(gamedata.npc[i].name + "（" + gamedata.npc[i].id + "）", "4###"));
+        }
+    }
+    pt();
     // 打印地图
     printMap();
 }
