@@ -135,7 +135,8 @@ function getCommand(inputString) {
             // 对命令别名/缩写进行跳转
             commandName = commandsList[commandName];
         }
-        result = commandName(command);
+        // 执行命令
+        result = commandName["process"](command);
     }
     document.getElementById("output").value += '\n';
     if ([true, undefined].includes(result)) {
